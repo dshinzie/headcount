@@ -8,7 +8,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     er = EnrollmentRepository.new
     er.load_data({
       :enrollment => {
-        :kindergarten => "./fixture/Kindergartners in full-day program clean.csv"
+        :kindergarten => "./data/Kindergartners in full-day program.csv"
       }
     })
     enrollment = er.find_by_name("ACADEMY 20")
@@ -17,7 +17,6 @@ class EnrollmentRepositoryTest < Minitest::Test
   end
 
   def test_enrollment_loads_from_single_file
-    skip
     dr = EnrollmentRepository.new
     dr.load_data({
       :enrollment => {
@@ -53,7 +52,6 @@ class EnrollmentRepositoryTest < Minitest::Test
 
     expected = ['COLORADO', 'COLORADO SPRINGS 11']
     assert_equal expected, dr.find_all_matching('Col')
-
   end
 
 
