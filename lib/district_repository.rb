@@ -1,7 +1,7 @@
-require_relative 'district'
 require 'csv'
 require 'pry'
-#require 'enrollment'
+require './lib/enrollment'
+require './lib/district'
 
 class DistrictRepository
 
@@ -9,12 +9,10 @@ class DistrictRepository
 
   def initialize
     @districts = {}
+    @enrollment_repository = EnrollmentRepository.new
   end
 
   def load_data(data_source)
-    # validate and send to enrollment class
-    # enrollment class populates district array with enrollment districts
-    # create new districts class instance with new district data pulled from enrollment class
     filename = data_source.values.reduce({}, :merge!).values.join
     CSV.foreach(filename, headers: true, header_converters: :symbol) do |row|
       district = District.new(name: row[:location])
@@ -32,5 +30,7 @@ class DistrictRepository
     end.compact
   end
 
+  #write a method that triggers the load_file method in EnrollmentRepository
+  #use district class to access enrollment information
 
 end
