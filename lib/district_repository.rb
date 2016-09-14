@@ -12,17 +12,32 @@ class DistrictRepository
     @enrollment = EnrollmentRepository.new
   end
 
-  def load_data(data_source)
-    filename = data_source[:enrollment][:kindergarten]
-    CSV.foreach(filename, headers: true, header_converters: :symbol) do |row|
-      add_district(row)
+  def load_data(file_hash)
+    load_all(file_hash)
+  end
+
+  def load_all(file_hash)
+    load_data_district(file_hash)
+    @enrollment.load_data(file_hash)
+    binding.pry
+  end
+
+  def load_data_district(file_hash)
+    filepaths = Loader.extract_filenames(file_hash)
+    filepaths.each do |filepath|
+      contents = Loader.csv_parse(filepath)
+      contents.each do |row|
+        add_district(row)
+      end
     end
   end
 
-  def load_all(data_source)
-    load_data(data_source)
-    @enrollment.load_data(data_source)
-  end
+  # def load_data(file_hash)
+  #   filename = file_hash[:enrollment][:kindergarten]
+  #   CSV.foreach(filename, headers: true, header_converters: :symbol) do |row|
+  #     add_district(row)
+  #   end
+  # end
 
   def add_district(row)
     name = row[:location].upcase
@@ -40,7 +55,3 @@ class DistrictRepository
   end
 
 end
-
-
-#write a method that triggers the load_file method in EnrollmentRepository
-#use district class to access enrollment information

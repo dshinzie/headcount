@@ -1,4 +1,5 @@
 require_relative 'enrollment'
+require_relative 'loader'
 require 'csv'
 require 'pry'
 
@@ -9,10 +10,13 @@ class EnrollmentRepository
     @enrollments = {}
   end
 
-  def load_data(data_source)
-    filename = data_source[:enrollment][:kindergarten]
-    CSV.foreach(filename, headers: true, header_converters: :symbol) do |row|
-      add_enrollment(row)
+  def load_data(file_hash)
+    filepaths = Loader.extract_filenames(file_hash)
+    filepaths.each do |filepath|
+      contents = Loader.csv_parse(filepath)
+      contents.each do |row|
+        add_enrollment(row)
+      end
     end
   end
 
