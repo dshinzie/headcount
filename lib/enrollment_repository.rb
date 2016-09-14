@@ -10,11 +10,20 @@ class EnrollmentRepository
   end
 
   def load_data(data_source)
+    data = {}
     filename = data_source.values.reduce({}, :merge!).values.join
     CSV.foreach(filename, headers: true, header_converters: :symbol) do |row|
       district_name = row[:location].upcase
-      @enrollment[district_name] ||= {}
-      @enrollment[dist_name][row[:timeframe].to_i] = clean_participation(row[:data])
+      data[district_name] ||= {}
+      data[dist_name][row[:timeframe].to_i] = clean_participation(row[:data])
+    end
+    create_enrollment_objects(data)
+  end
+
+  def create_enrollment_objects(enrollment_data)
+    enrollment_data.each do |district, data|
+      e = Enrollment.new({:name => district, :kindergarten_participation => data})
+      @enrollment[district] = e
     end
   end
 
