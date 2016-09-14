@@ -3,10 +3,10 @@ require 'csv'
 require 'pry'
 
 class EnrollmentRepository
-  attr_reader :enrollment
+  attr_reader :enrollments
 
   def initialize
-    @enrollment = {}
+    @enrollments = {}
   end
 
   def load_data(data_source)

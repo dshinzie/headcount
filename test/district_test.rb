@@ -1,11 +1,11 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-require './lib/district'
+require_relative '../lib/district'
 
 class DistrictTest < Minitest::Test
 
-  def test_district_name_is_instance_variable
-    d = District.new({:location => "test"})
+  def test_can_create_new_district_name
+    d = District.new({:name => "test"})
 
     assert_equal "TEST", d.name
   end

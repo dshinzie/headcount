@@ -1,8 +1,14 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-require './lib/district_repository'
+require_relative '../lib/district_repository'
 
 class DistrictRepositoryTest < Minitest::Test
+
+  def test_district_repository_initializes_with_empty_hash
+    dr = DistrictRepository.new
+
+    assert_equal ({}), dr.districts
+  end
 
   def test_districts_hash_is_populated_after_loading
     dr = DistrictRepository.new
@@ -23,8 +29,8 @@ class DistrictRepositoryTest < Minitest::Test
       }
     })
 
-    expected = ['Colorado', 'ACADEMY 20', 'Agate 300']
-    expected.each { |district| assert dr.districts.keys.include?(district.upcase)}
+    test_list = ['Colorado', 'ACADEMY 20', 'Agate 300']
+    test_list.each { |district| assert dr.districts.keys.include?(district.upcase)}
   end
 
   def test_find_by_name_returns_district_instance
@@ -47,11 +53,16 @@ class DistrictRepositoryTest < Minitest::Test
       }
     })
 
-    expected = ['COLORADO', 'COLORADO SPRINGS 11']
-    assert_equal expected, dr.find_all_matching('Col')
-
+    assert_equal 2, dr.find_all_matching('Col').length
+    assert_equal 8, dr.find_all_matching('AD').length
   end
 
+  def test_district_repository_adds_to_hash
+    dr = DistrictRepository.new
+
+    dr.add_district( {:location => 'Test'} )
+    assert dr.districts.keys.include?('TEST')
+  end
 
 
 end

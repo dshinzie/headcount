@@ -1,8 +1,15 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-require './lib/enrollment_repository'
+require_relative '../lib/enrollment_repository'
 
 class EnrollmentRepositoryTest < Minitest::Test
+
+  def test_enrollment_repository_initializes_with_empty_hash
+    er = EnrollmentRepository.new
+
+    assert_equal ({}), er.enrollments
+  end
+
 
   def test_enrollment_hash_is_populated_after_loading
     er = EnrollmentRepository.new
@@ -11,25 +18,36 @@ class EnrollmentRepositoryTest < Minitest::Test
         :kindergarten => "./data/Kindergartners in full-day program.csv"
       }
     })
-    enrollment = er.find_by_name("ACADEMY 20")
 
-    refute er.enrollment.nil?
+    refute er.enrollments.nil?
   end
 
-  def test_enrollment_loads_from_single_file
-    dr = EnrollmentRepository.new
-    dr.load_data({
+  def test_enrollment_loads_enrollment_names_from_single_file
+    er = EnrollmentRepository.new
+    er.load_data({
       :enrollment => {
         :kindergarten => "./data/Kindergartners in full-day program.csv"
       }
     })
 
-    expected = ['Colorado', 'ACADEMY 20', 'Agate 300']
-    expected.each { |district| assert dr.enrollment.keys.include?(district.upcase)}
+    test_list = ['Colorado', 'ACADEMY 20', 'Agate 300']
+    test_list.each { |enrollment| assert er.enrollments.keys.include?(enrollment.upcase)}
   end
 
-  def test_find_by_name_returns_district_instance
-    skip
+  def test_enrollment_loads_enrollment_instances_into_hash
+    er = EnrollmentRepository.new
+    er.load_data({
+      :enrollment => {
+        :kindergarten => "./data/Kindergartners in full-day program.csv"
+      }
+    })
+
+    assert er.enrollments.values.first.instance_of?(Enrollment)
+    assert er.enrollments.values.last.instance_of?(Enrollment)
+  end
+
+
+  def test_find_by_name_returns_enrollment_instance
     dr = EnrollmentRepository.new
     dr.load_data({
       :enrollment => {
@@ -38,22 +56,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     })
 
     test_list = ['Colorado', 'ACADEMY 20', 'Agate 300']
-    test_list.each { |district| assert dr.find_by_name(district.upcase).instance_of?(District) }
+    test_list.each { |enrollment| assert dr.find_by_name(enrollment.upcase).instance_of?(Enrollment) }
   end
-
-  def test_find_all_returns_all_closest_enrollment
-    skip
-    dr = EnrollmentRepository.new
-    dr.load_data({
-      :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv"
-      }
-    })
-
-    expected = ['COLORADO', 'COLORADO SPRINGS 11']
-    assert_equal expected, dr.find_all_matching('Col')
-  end
-
-
 
 end
