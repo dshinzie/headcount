@@ -11,4 +11,21 @@ class Enrollment
     @kindergarten_participation = input_hash[:kindergarten_participation]
   end
 
+  def kindergarten_participation_by_year
+    data = {}
+    @kindergarten_participation.each do |key, value|
+      data[key] = value.round(3)
+    end
+    data
+  end
+
+  def kindergarten_participation_in_year(year)
+    unless @kindergarten_participation.has_key?(year)
+      return nil
+    else
+      result = @kindergarten_participation[year]
+      result.round(3)
+    end
+  end
+
 end

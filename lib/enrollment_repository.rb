@@ -15,7 +15,7 @@ class EnrollmentRepository
     CSV.foreach(filename, headers: true, header_converters: :symbol) do |row|
       district_name = row[:location].upcase
       data[district_name] ||= {}
-      data[dist_name][row[:timeframe].to_i] = clean_participation(row[:data])
+      data[district_name][row[:timeframe].to_i] = clean_participation(row[:data])
     end
     create_enrollment_objects(data)
   end
