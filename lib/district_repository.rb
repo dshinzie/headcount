@@ -17,9 +17,7 @@ class DistrictRepository
     # create new districts class instance with new district data pulled from enrollment class
     filename = data_source.values.reduce({}, :merge!).values.join
     CSV.foreach(filename, headers: true, header_converters: :symbol) do |row|
-      #district_name = row[:location].upcase
-
-      district = District.new(row)
+      district = District.new(name: row[:location])
       @districts[district.name] = district
     end
   end
