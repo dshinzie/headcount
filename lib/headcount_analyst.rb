@@ -1,5 +1,5 @@
 require 'pry'
-require './lib/district_repository'
+require_relative 'district_repository'
 
 class HeadcountAnalyst
   def kindergarten_participation_rate_variation(district, location)

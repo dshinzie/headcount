@@ -1,7 +1,7 @@
 require 'csv'
 require 'pry'
-require './lib/enrollment'
-require './lib/district'
+require_relative 'enrollment'
+require_relative 'district'
 
 class DistrictRepository
 
@@ -13,24 +13,29 @@ class DistrictRepository
   end
 
   def load_data(data_source)
-    filename = data_source.values.reduce({}, :merge!).values.join
+    filename = data_source[:enrollment][:kindergarten]
     CSV.foreach(filename, headers: true, header_converters: :symbol) do |row|
-      district = District.new(name: row[:location])
-      @districts[district.name] = district
+      add_district(row)
     end
   end
 
-  def find_by_name(district)
-    @districts[district]
+  def add_district(row)
+    name = row[:location].upcase
+    @districts[name] = District.new( { name: name } ) if !find_by_name(name)
+  end
+
+  def find_by_name(name)
+    @districts[name]
   end
 
   def find_all_matching(search_criteria)
-    matching_districts = @districts.keys.map do |district|
-      district if district.include?(search_criteria.upcase)
-    end.compact
+    result = @districts.select do |name, district| #key, value
+      district if name.include?(search_criteria.upcase)
+    end.values
   end
-
-  #write a method that triggers the load_file method in EnrollmentRepository
-  #use district class to access enrollment information
-
+  
 end
+
+
+#write a method that triggers the load_file method in EnrollmentRepository
+#use district class to access enrollment information

@@ -23,8 +23,7 @@ class Enrollment
     unless @kindergarten_participation.has_key?(year)
       return nil
     else
-      result = @kindergarten_participation[year]
-      result.round(3)
+      @kindergarten_participation[year].round(3)
     end
   end
 

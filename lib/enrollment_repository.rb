@@ -10,32 +10,30 @@ class EnrollmentRepository
   end
 
   def load_data(data_source)
-    data = {}
-    filename = data_source.values.reduce({}, :merge!).values.join
+
+    filename = data_source[:enrollment][:kindergarten]
     CSV.foreach(filename, headers: true, header_converters: :symbol) do |row|
-      district_name = row[:location].upcase
-      data[district_name] ||= {}
-      data[district_name][row[:timeframe].to_i] = clean_participation(row[:data])
-    end
-    create_enrollment_objects(data)
-  end
-
-  def create_enrollment_objects(enrollment_data)
-    enrollment_data.each do |district, data|
-      e = Enrollment.new({:name => district, :kindergarten_participation => data})
-      @enrollment[district] = e
+      add_enrollment(row)
     end
   end
 
-  def clean_participation(data)
-    data.to_f if number?(data)
+  def add_enrollment(row)
+    name = row[:location]
+    year = row[:timeframe].to_i
+    data = row[:data].to_f
+
+    #if name doesn't exist in hash, create new hash
+    #otherwise, add {year => data} combination to kindergarten_participation
+    if !find_by_name(name)
+      @enrollments[name.upcase] = Enrollment.new( {name: name, kindergarten_participation: {year => data}} )
+    else
+      enrollment = find_by_name(name) #enrollment instance
+      enrollment.kindergarten_participation[year] = data
+    end
   end
 
-  def number?(data)
-    data == '0' || data.to_f > 0
+  def find_by_name(name)
+    @enrollments[name.upcase]
   end
 
-  def find_by_name(enrollment)
-    @enrollment[enrollment]
-  end
 end
