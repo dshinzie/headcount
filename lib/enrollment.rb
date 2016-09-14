@@ -1,4 +1,5 @@
 require 'csv'
+require_relative 'sanitizer'
 
 class Enrollment
 
@@ -14,7 +15,7 @@ class Enrollment
   def kindergarten_participation_by_year
     data = {}
     @kindergarten_participation.each do |key, value|
-      data[key] = value.round(3)
+      data[key] = Sanitizer.truncate(value)
     end
     data
   end
@@ -23,7 +24,7 @@ class Enrollment
     unless @kindergarten_participation.has_key?(year)
       return nil
     else
-      @kindergarten_participation[year].round(3)
+      Sanitizer.truncate(@kindergarten_participation[year])
     end
   end
 

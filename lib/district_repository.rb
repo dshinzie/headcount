@@ -1,15 +1,15 @@
 require 'csv'
 require 'pry'
-require_relative 'enrollment'
+require_relative 'enrollment_repository'
 require_relative 'district'
 
 class DistrictRepository
 
-  attr_reader :districts
+  attr_reader :districts, :enrollment
 
   def initialize
     @districts = {}
-    @enrollment_repository = EnrollmentRepository.new
+    @enrollment = EnrollmentRepository.new
   end
 
   def load_data(data_source)
@@ -17,6 +17,11 @@ class DistrictRepository
     CSV.foreach(filename, headers: true, header_converters: :symbol) do |row|
       add_district(row)
     end
+  end
+
+  def load_all(data_source)
+    load_data(data_source)
+    @enrollment.load_data(data_source)
   end
 
   def add_district(row)
@@ -33,7 +38,7 @@ class DistrictRepository
       district if name.include?(search_criteria.upcase)
     end.values
   end
-  
+
 end
 
 
