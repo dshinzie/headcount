@@ -12,11 +12,9 @@ class HeadcountAnalyst
 
   def kindergarten_participation_rate_variation(district, location)
     name = location[:against]
-
     district_average = find_average_participation(district)
     location_average = find_average_participation(name)
-
-    rate_variation = Sanitizer.truncate(district_average/location_average)
+    Sanitizer.truncate(district_average/location_average)
   end
 
   def find_average_participation(name)
@@ -32,19 +30,23 @@ class HeadcountAnalyst
 
   def build_variation_trend_hash(district, location, first_run)
     if first_run
-      results = @dr.enrollment.enrollments[district].kindergarten_participation
-      results.each do |key, value|
-        @rate_trend[key] = value
-      end
-      first_run = false
+      assign_hash_values(district, true)
       build_variation_trend_hash(district, location, false)
     else
-      results = @dr.enrollment.enrollments[location].kindergarten_participation
-      results.each do |key, value|
-        @rate_trend[key] = Sanitizer.truncate(@rate_trend[key]/value)
-      end
+      assign_hash_values(location, false)
     end
     @rate_trend.sort.to_h
+  end
+
+  def assign_hash_values(input, first_object)
+    results = @dr.enrollment.enrollments[input].kindergarten_participation
+    results.each do |key, value|
+      if first_object
+        @rate_trend[key] = value
+      else
+        @rate_trend[key] = Sanitizer.truncate(@rate_trend[key] / value)
+      end
+    end
   end
 
 end

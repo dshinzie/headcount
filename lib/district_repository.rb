@@ -1,7 +1,8 @@
-require 'csv'
-require 'pry'
 require_relative 'enrollment_repository'
 require_relative 'district'
+require_relative 'loader'
+require 'csv'
+require 'pry'
 
 class DistrictRepository
 
