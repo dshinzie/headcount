@@ -45,20 +45,42 @@ class HeadcountAnalyst
     kindergarten_variation = kindergarten_participation_rate_variation(district, :against => "COLORADO")
     graduation_variation = high_school_participation_rate_variation(district, :against => "COLORADO")
 
-    Sanitizer.truncate(kindergarten_variation / graduation_variation)
+    if graduation_variation == 0
+      0
+    else
+      Sanitizer.truncate(kindergarten_variation / graduation_variation)
+    end
+
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(location)
     name = location.values.reduce
-    variation = kindergarten_participation_against_high_school_graduation(name)
-    binding.pry
 
-    if variation.between?(0.600, 1.500)
-      return true
+    if name.class == Array
+      name.each {|loc| calculate_correlation(loc) }
+    elsif name.upcase != 'STATEWIDE'
+      calculate_correlation(name)
     else
-      return false
+      calculate_percentage_correlated
     end
+  end
 
+  def calculate_correlation(name)
+    variation = kindergarten_participation_against_high_school_graduation(name)
+    if  variation.between?(0.6, 1.5)
+      true
+    else
+      false
+    end
+  end
+
+  def calculate_percentage_correlated
+    d = @dr.districts.keys
+    counter = 0
+    d.each do |district|
+      counter += 1 if calculate_correlation(district)
+    end
+    counter.to_f / d.length.to_f >= 0.70 ? true : false
   end
 
   def build_variation_trend_hash(district, location, first_run)
