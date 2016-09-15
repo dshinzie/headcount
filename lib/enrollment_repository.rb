@@ -21,7 +21,6 @@ class EnrollmentRepository
         add_enrollment(row, school_level)
       end
     end
-    binding.pry
 
   end
 
@@ -38,7 +37,6 @@ class EnrollmentRepository
     else
       enrollment = find_by_name(name) #enrollment instance
       enrollment.send(school_level)[year] = data
-      #enrollment.send("#{school_level[year]}=", "#{data}")
     end
   end
 
