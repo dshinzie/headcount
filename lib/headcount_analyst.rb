@@ -21,7 +21,7 @@ class HeadcountAnalyst
 
   def find_average_participation(name)
     results = @dr.enrollment.enrollments[name].kindergarten_participation.values
-    average = results.reduce(0) {|sum, rate| sum += rate}.to_f/results.size
+    average = results.reduce(0) {|sum, rate| sum += rate}.to_f / results.size
     Sanitizer.truncate(average)
   end
 
@@ -31,7 +31,6 @@ class HeadcountAnalyst
   end
 
   def build_variation_trend_hash(district, location, first_run)
-
     if first_run
       results = @dr.enrollment.enrollments[district].kindergarten_participation
       results.each do |key, value|
@@ -46,7 +45,6 @@ class HeadcountAnalyst
       end
     end
     @rate_trend.sort.to_h
-    # binding.pry
   end
 
 end

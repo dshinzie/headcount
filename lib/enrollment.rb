@@ -21,12 +21,10 @@ class Enrollment
   end
 
   def kindergarten_participation_in_year(year)
-    binding.pry
     unless @kindergarten_participation.has_key?(year)
       return nil
     else
       Sanitizer.truncate(@kindergarten_participation[year])
-      binding.pry
     end
   end
 
