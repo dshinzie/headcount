@@ -1,7 +1,8 @@
+require_relative 'district_repository'
 require "csv"
 
 module Loader
-extend self
+  extend self
 
   def extract_filenames(file_hash)
     filepaths = file_hash.values.map { |hash| hash.values}
