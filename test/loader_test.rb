@@ -16,6 +16,4 @@ class LoaderTest < Minitest::Test
     assert Loader.extract_filenames(file_hash).instance_of?(Array)
   end
 
-  def test_
-
 end

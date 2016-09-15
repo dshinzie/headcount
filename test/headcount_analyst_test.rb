@@ -8,27 +8,23 @@ class HeadcountAnalystTest < Minitest::Test
 
   def setup
     @dr = DistrictRepository.new
-    @dr.load_all({
+    @dr.load_data({
       :enrollment => {
         :kindergarten => "./data/Kindergartners in full-day program.csv"
       }
     })
-
   end
 
   def test_enrollment_loads_with_district_repo_load
-
     refute dr.enrollment.nil?
   end
 
   def test_enrollment_loads_enrollment_names_from_single_file
-
     test_list = ['Colorado', 'ACADEMY 20', 'Agate 300']
     test_list.each { |enrollment| assert dr.enrollment.enrollments.keys.include?(enrollment.upcase)}
   end
 
   def test_it_finds_average_participation
-
     ha = HeadcountAnalyst.new(dr)
 
     assert_equal 0.530 , ha.find_average_participation("COLORADO")
