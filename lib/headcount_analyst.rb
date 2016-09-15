@@ -12,13 +12,26 @@ class HeadcountAnalyst
 
   def kindergarten_participation_rate_variation(district, location)
     name = location[:against]
-    district_average = find_average_participation(district)
-    location_average = find_average_participation(name)
+    district_average = find_average_kindergarten_participation(district)
+    location_average = find_average_kindergarten_participation(name)
     Sanitizer.truncate(district_average/location_average)
   end
 
-  def find_average_participation(name)
+  def high_school_participation_rate_variation(district, location)
+    name = location[:against]
+    district_average = find_average_high_school_participation(district)
+    location_average = find_average_high_school_participation(name)
+    Sanitizer.truncate(district_average/location_average)
+  end
+
+  def find_average_kindergarten_participation(name)
     results = @dr.enrollment.enrollments[name].kindergarten_participation.values
+    average = results.reduce(0) {|sum, rate| sum += rate}.to_f / results.size
+    Sanitizer.truncate(average)
+  end
+
+  def find_average_high_school_participation(name)
+    results = @dr.enrollment.enrollments[name].high_school_graduation_participation.values
     average = results.reduce(0) {|sum, rate| sum += rate}.to_f / results.size
     Sanitizer.truncate(average)
   end
@@ -26,6 +39,26 @@ class HeadcountAnalyst
   def kindergarten_participation_rate_variation_trend(district, location)
     name = location[:against]
     build_variation_trend_hash(district, name, true)
+  end
+
+  def kindergarten_participation_against_high_school_graduation(district)
+    kindergarten_variation = kindergarten_participation_rate_variation(district, :against => "COLORADO")
+    graduation_variation = high_school_participation_rate_variation(district, :against => "COLORADO")
+
+    Sanitizer.truncate(kindergarten_variation / graduation_variation)
+  end
+
+  def kindergarten_participation_correlates_with_high_school_graduation(location)
+    name = location.values.reduce
+    variation = kindergarten_participation_against_high_school_graduation(name)
+    binding.pry
+
+    if variation.between?(0.600, 1.500)
+      return true
+    else
+      return false
+    end
+
   end
 
   def build_variation_trend_hash(district, location, first_run)

@@ -77,4 +77,51 @@ class EnrollmentTest < Minitest::Test
 
     assert_in_delta 0.144, district.enrollment.kindergarten_participation_in_year(2004), 0.005
  end
+
+   def test_can_create_new_enrollment_participation_high_school
+     er = Enrollment.new({name: "test name",:kindergarten_participation => {test_header: "test"}})
+
+     assert_equal ({test_header: "test"}), er.kindergarten_participation
+     assert_equal ({}), er.high_school_graduation_participation
+   end
+
+   def test_high_school_grad_participation_can_be_populated
+     er = Enrollment.new({name: "test name",:kindergarten_participation => {test_header: "test"}})
+
+     er.high_school_graduation_participation["test header"] = "test value"
+
+     expected = {"test header" => "test value"}
+
+     assert_equal expected, er.high_school_graduation_participation
+   end
+
+   def test_can_return_hs_participation_hash_by_year
+
+     test_hash = {2010=>0.724, 2011=>0.739, 2012=>0.753, 2013=>0.769, 2014=>0.773}
+     er = Enrollment.new({name: "test name",:kindergarten_participation => test_hash})
+
+     er.high_school_graduation_participation = test_hash
+
+     assert_equal test_hash, er.graduation_rate_by_year
+   end
+
+   def test_grad_rate_returns_participation_in_year
+     e = Enrollment.new({:name => "ACADEMY 20", :kindergarten_participation => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}})
+
+     test_hash = {2010=>0.724, 2011=>0.739, 2012=>0.753, 2013=>0.769, 2014=>0.773}
+     e.high_school_graduation_participation = test_hash
+
+     assert_equal 0.724, e.graduation_rate_in_year(2010)
+   end
+
+
+   def test_grad_rate_returns_nil_if_year_does_not_exist
+     e = Enrollment.new({:name => "ACADEMY 20", :kindergarten_participation => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}})
+
+     test_hash = {2010=>0.724, 2011=>0.739, 2012=>0.753, 2013=>0.769, 2014=>0.773}
+     e.high_school_graduation_participation = test_hash
+
+     assert_equal nil, e.graduation_rate_in_year(1990)
+   end
+
 end
