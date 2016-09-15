@@ -10,7 +10,7 @@ class Enrollment
   def initialize(input_hash)
     @name = input_hash[:name].upcase
     @kindergarten_participation = input_hash[:kindergarten_participation]
-    @high_school_graduation_participation = {} #input_hash[:high_school_graduation_]
+    @high_school_graduation_participation = {} #input_hash[:high_school_graduation_participation]
   end
 
   def kindergarten_participation_by_year
@@ -26,6 +26,22 @@ class Enrollment
       return nil
     else
       Sanitizer.truncate(@kindergarten_participation[year])
+    end
+  end
+
+  def graduation_rate_by_year
+    data = {}
+    @high_school_graduation_participation.each do |key, value|
+      data[key] = Sanitizer.truncate(value)
+    end
+    data
+  end
+
+  def graduation_rate_in_year(year)
+    unless @high_school_graduation_participation.has_key?(year)
+      return nil
+    else
+      Sanitizer.truncate(@high_school_graduation_participation[year])
     end
   end
 

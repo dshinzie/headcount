@@ -21,7 +21,7 @@ class EnrollmentRepository
         add_enrollment(row, school_level)
       end
     end
-
+# binding.pry
   end
 
   def add_enrollment(row, school_level)
