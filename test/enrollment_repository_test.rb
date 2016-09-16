@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require_relative 'test_helper'
 require_relative '../lib/enrollment_repository'
 
 class EnrollmentRepositoryTest < Minitest::Test
@@ -9,7 +8,6 @@ class EnrollmentRepositoryTest < Minitest::Test
 
     assert_equal ({}), er.enrollments
   end
-
 
   def test_enrollment_hash_is_populated_after_loading
     er = EnrollmentRepository.new
@@ -45,7 +43,6 @@ class EnrollmentRepositoryTest < Minitest::Test
     assert er.enrollments.values.first.instance_of?(Enrollment)
     assert er.enrollments.values.last.instance_of?(Enrollment)
   end
-
 
   def test_find_by_name_returns_enrollment_instance
     dr = EnrollmentRepository.new

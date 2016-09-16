@@ -7,9 +7,5 @@ class District
 
   def initialize(data_hash)
     @name = data_hash[:name].upcase
-    @enrollment = nil
-    # @statewide_test
-    # @economic_profile
   end
-
 end

@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require_relative 'test_helper'
 require_relative '../lib/district_repository'
 
 class DistrictRepositoryTest < Minitest::Test
@@ -45,7 +44,7 @@ class DistrictRepositoryTest < Minitest::Test
     test_list.each { |district| assert dr.find_by_name(district.upcase).instance_of?(District) }
   end
 
-  def test_find_all_returns_all_closest_districts
+  def test_find_all_returns_all_matching_districts
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
@@ -63,6 +62,4 @@ class DistrictRepositoryTest < Minitest::Test
     dr.add_district( {:location => 'Test'} )
     assert dr.districts.keys.include?('TEST')
   end
-
-
 end

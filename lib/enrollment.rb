@@ -9,39 +9,39 @@ class Enrollment
 
   def initialize(input_hash)
     @name = input_hash[:name].upcase
-    @kindergarten_participation = input_hash[:kindergarten_participation]
-    @high_school_graduation_participation = {} #input_hash[:high_school_graduation_participation]
+    @kindergarten_participation = input_hash[:kindergarten_participation] || {}
+    @high_school_graduation_participation = input_hash[:high_school_graduation_participation] || {}
   end
 
   def kindergarten_participation_by_year
+    sanitize_hash(@kindergarten_participation)
+  end
+
+  def graduation_rate_by_year
+    sanitize_hash(@high_school_graduation_participation)
+  end
+
+  def sanitize_hash(data_hash)
     data = {}
-    @kindergarten_participation.each do |key, value|
+    data_hash.each do |key, value|
       data[key] = Sanitizer.truncate(value)
     end
     data
   end
 
   def kindergarten_participation_in_year(year)
-    unless @kindergarten_participation.has_key?(year)
-      return nil
-    else
-      Sanitizer.truncate(@kindergarten_participation[year])
-    end
-  end
-
-  def graduation_rate_by_year
-    data = {}
-    @high_school_graduation_participation.each do |key, value|
-      data[key] = Sanitizer.truncate(value)
-    end
-    data
+    safe_year_retrieval(@kindergarten_participation, year)
   end
 
   def graduation_rate_in_year(year)
-    unless @high_school_graduation_participation.has_key?(year)
+    safe_year_retrieval(@high_school_graduation_participation, year)
+  end
+
+  def safe_year_retrieval(data_hash, year)
+    unless data_hash.has_key?(year)
       return nil
     else
-      Sanitizer.truncate(@high_school_graduation_participation[year])
+      Sanitizer.truncate(data_hash[year])
     end
   end
 
