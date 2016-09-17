@@ -1,4 +1,5 @@
 require_relative 'enrollment_repository'
+require_relative 'statewide_repository'
 require_relative 'district'
 require_relative 'loader'
 require 'csv'
@@ -16,7 +17,7 @@ class DistrictRepository
   def load_data(file_hash)
     load_data_district(file_hash)
     @enrollment.load_data(file_hash)
-    # @statewide_repository.load_data(file_hash)
+    @statewide_repository.load_data(file_hash)
     link_enrollments
   end
 
