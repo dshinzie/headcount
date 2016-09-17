@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require_relative 'test_helper'
 require_relative '../lib/district'
 
 class DistrictTest < Minitest::Test
@@ -9,6 +8,4 @@ class DistrictTest < Minitest::Test
 
     assert_equal "TEST", d.name
   end
-
-
 end

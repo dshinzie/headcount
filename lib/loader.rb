@@ -1,4 +1,3 @@
-require_relative 'district_repository'
 require "csv"
 
 module Loader

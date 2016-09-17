@@ -1,4 +1,5 @@
 require_relative 'enrollment_repository'
+require_relative 'statewide_repository'
 require_relative 'district'
 require_relative 'loader'
 require 'csv'
@@ -16,7 +17,8 @@ class DistrictRepository
   def load_data(file_hash)
     load_data_district(file_hash)
     @enrollment.load_data(file_hash)
-    add_enrollments
+    @statewide_repository.load_data(file_hash)
+    link_enrollments
   end
 
   def load_data_district(file_hash)
@@ -31,7 +33,7 @@ class DistrictRepository
 
   def add_district(row)
     name = row[:location].upcase
-    @districts[name] = District.new( { name: name } ) if !find_by_name(name)
+    @districts[name] ||= District.new( { name: name } )
   end
 
   def find_by_name(name)
@@ -40,14 +42,14 @@ class DistrictRepository
 
   def find_all_matching(search_criteria)
     @districts.select do |name, district| #key, value
-      district if name.include?(search_criteria.upcase)
+      name.include?(search_criteria.upcase)
     end.values
   end
 
-  def add_enrollments
+  def link_enrollments
     e = @enrollment.enrollments
-    e.each do |name, rate|
-      find_by_name(name).enrollment = rate
+    e.each do |name, enrollment_object|
+      find_by_name(name).enrollment = enrollment_object
     end
   end
 
