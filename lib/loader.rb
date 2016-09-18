@@ -1,12 +1,11 @@
 require_relative 'district'
-require_relative 'enrollment_repository'
-require_relative 'statewide_test_repository'
+require_relative 'sanitizer'
+require_relative 'statewide_test'
+require_relative 'enrollment'
 require "csv"
 
 module Loader
   extend self
-
-  attr_reader :d, :e, :st, :test
 
   def extract_filenames(file_hash)
     filepaths = file_hash.values.map { |hash| hash.values}
@@ -30,7 +29,6 @@ module Loader
   def add_district(row, districts)
     name = row[:location].upcase
     districts[name] ||= District.new( { name: name } )
-    @d = districts
   end
 
   def load_data_enrollment(file_hash, enrollments)
@@ -51,23 +49,20 @@ module Loader
 
     enrollments[name.upcase] ||= Enrollment.new({name: name })
     enrollments[name.upcase].send(category)[year] = data
-    @e = enrollments
   end
 
   def load_data_statewide(file_hash, statewide_tests)
     category_hash = file_hash[:statewide_testing]
     category_hash.each do |category, filepath|
-      #category = key.to_sym
       contents = Loader.csv_parse(filepath)
       contents.each do |row|
-        if category == :third_grade || category == :eighth_grade
+        if category.to_s.end_with?("_grade")
           add_testing_by_proficiency(row, category, statewide_tests)
         else
           add_testing_by_ethnicity(row, category, statewide_tests)
         end
       end
     end
-    statewide_tests
   end
 
   def add_testing_by_proficiency(row, category, statewide_tests)
@@ -79,7 +74,6 @@ module Loader
     statewide_tests[name.upcase] ||= StatewideTest.new({name: name })
     statewide_tests[name.upcase].send(category)[year] ||= {}
     statewide_tests[name.upcase].send(category)[year][proficiency] = data
-    @st = statewide_tests
   end
 
   def add_testing_by_ethnicity(row, category, statewide_tests)
@@ -92,7 +86,6 @@ module Loader
     statewide_tests[name.upcase].instance_variable_set("@#{race}", {}) if !statewide_tests[name.upcase].instance_variable_defined?("@#{race}")
     statewide_tests[name.upcase].send(race)[year] ||= {}
     statewide_tests[name.upcase].send(race)[year][category] = data
-    @st = statewide_tests
   end
 
 end
