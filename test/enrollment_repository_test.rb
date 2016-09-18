@@ -29,7 +29,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     })
 
     test_list = ['Colorado', 'ACADEMY 20', 'Agate 300']
-    test_list.each { |enrollment| assert er.enrollments.keys.include?(enrollment.upcase)}
+    test_list.each { |name| assert er.enrollments.keys.include?(name.upcase)}
   end
 
   def test_enrollment_loads_enrollment_instances_into_hash
