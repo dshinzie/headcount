@@ -56,10 +56,41 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal 8, dr.find_all_matching('AD').length
   end
 
-  def test_district_repository_adds_to_hash
+  def test_enrollment_is_linked_after_loading
     dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "./data/Kindergartners in full-day program.csv"
+      }
+    })
 
-    dr.add_district( {:location => 'Test'} )
-    assert dr.districts.keys.include?('TEST')
+    test_list = ['Colorado', 'ACADEMY 20', 'Agate 300']
+
+    test_list.each { |name| assert dr.districts.values.find{|district| district.enrollment.name == name.upcase }}
+    #dr.districts.values.each {|district| refute district.enrollment.nil?}
   end
+
+  def test_statewide_test_is_linked_after_loading
+    dr = DistrictRepository.new
+    dr.load_data({
+      :enrollment => {
+        :kindergarten => "./data/Kindergartners in full-day program.csv",
+        :high_school_graduation => "./data/High school graduation rates.csv",
+      },
+      :statewide_testing => {
+        :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+        :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+        :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+      }
+    })
+
+    test_list = ['Colorado', 'ACADEMY 20', 'Agate 300']
+
+    test_list.each { |name| assert dr.districts.values.find{|district| district.statewide_test.name == name.upcase }}
+    #dr.districts.values.each {|district| refute district.statewide_test.nil?}
+
+  end
+
 end

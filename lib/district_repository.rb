@@ -1,5 +1,5 @@
 require_relative 'enrollment_repository'
-require_relative 'statewide_repository'
+require_relative 'statewide_test_repository'
 require_relative 'district'
 require_relative 'loader'
 require 'csv'
@@ -7,33 +7,20 @@ require 'pry'
 
 class DistrictRepository
 
-  attr_reader :districts, :enrollment
+  attr_reader :districts, :enrollment, :statewide_test
 
   def initialize
     @districts = {}
     @enrollment = EnrollmentRepository.new
+    @statewide_test = StatewideTestRepository.new
   end
 
   def load_data(file_hash)
-    load_data_district(file_hash)
-    @enrollment.load_data(file_hash)
-    @statewide_repository.load_data(file_hash)
+    Loader.load_data_district(file_hash, @districts)
+    @enrollment.load_data(file_hash) if file_hash.keys.include?(:enrollment)
+    @statewide_test.load_data(file_hash) if file_hash.keys.include?(:statewide_testing)
     link_enrollments
-  end
-
-  def load_data_district(file_hash)
-    filepaths = Loader.extract_filenames(file_hash)
-    filepaths.each do |filepath|
-      contents = Loader.csv_parse(filepath)
-      contents.each do |row|
-        add_district(row)
-      end
-    end
-  end
-
-  def add_district(row)
-    name = row[:location].upcase
-    @districts[name] ||= District.new( { name: name } )
+    link_statewide_tests
   end
 
   def find_by_name(name)
@@ -50,6 +37,13 @@ class DistrictRepository
     e = @enrollment.enrollments
     e.each do |name, enrollment_object|
       find_by_name(name).enrollment = enrollment_object
+    end
+  end
+
+  def link_statewide_tests
+    st = @statewide_test.statewide_tests
+    st.each do |name, statewide_object|
+      find_by_name(name).statewide_test = statewide_object
     end
   end
 

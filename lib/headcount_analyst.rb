@@ -50,11 +50,7 @@ class HeadcountAnalyst
     kindergarten_variation = kindergarten_participation_rate_variation(district, :against => "COLORADO")
     graduation_variation = high_school_participation_rate_variation(district, :against => "COLORADO")
 
-    if graduation_variation == 0
-      0
-    else
-      Sanitizer.truncate(kindergarten_variation / graduation_variation)
-    end
+    graduation_variation == 0 ? 0 : Sanitizer.truncate(kindergarten_variation / graduation_variation)
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(location)

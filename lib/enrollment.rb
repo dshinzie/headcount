@@ -14,19 +14,11 @@ class Enrollment
   end
 
   def kindergarten_participation_by_year
-    sanitize_hash(@kindergarten_participation)
+    Sanitizer.sanitize_hash(@kindergarten_participation)
   end
 
   def graduation_rate_by_year
-    sanitize_hash(@high_school_graduation_participation)
-  end
-
-  def sanitize_hash(data_hash)
-    data = {}
-    data_hash.each do |key, value|
-      data[key] = Sanitizer.truncate(value)
-    end
-    data
+    Sanitizer.sanitize_hash(@high_school_graduation_participation)
   end
 
   def kindergarten_participation_in_year(year)
