@@ -4,6 +4,7 @@ require_relative 'economic_profile_repository'
 require_relative 'sanitizer'
 
 class HeadcountAnalyst
+  include Sanitizer
   attr_accessor :dr
 
   def initialize(district_repository)
@@ -77,6 +78,33 @@ class HeadcountAnalyst
   end
 
   def high_poverty_and_high_school_graduation
-
+    #Above the statewide average in number of students qualifying for free and reduced price lunch
+    # Above the statewide average percentage of school-aged children in poverty
+    # Above the statewide average high school graduation rate
   end
+
+  def district_against_state_poverty_variation
+    districts_high_poverty = []
+
+    # state_average_percent = find_average_free_reduced_lunch("COLORADO", :percentage)
+    state_average = get_average_lunch("COLORADO", :total)
+    binding.pry
+
+    dr.districts.keys.each do |district|
+      district_average = get_average_lunch(district, :total)
+      districts_high_poverty << district if district_average > state_average
+    end
+    districts_high_poverty
+    binding.pry
+  end
+
+  def get_average_lunch(district, data_type)
+    district = @dr.find_by_name(district)
+    results = district.economic_profile.free_or_reduced_price_lunch.values
+
+    return truncate(results.map { |x| x[data_type].to_f }.reduce(:+) / results.size) if district.name.upcase != "COLORADO"
+    return truncate(results.map { |x| x[data_type].to_f }.reduce(:+) / results.size / @dr.districts.size) if district.name.upcase == "COLORADO"
+  end
+
+
 end
