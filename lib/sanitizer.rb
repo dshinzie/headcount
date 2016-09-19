@@ -31,4 +31,9 @@ extend self
     input.downcase.to_sym
   end
 
+  def sanitize_years(input)
+    input.include?('-') ? input.split('-').map(&:to_i) : input.to_i
+  end
+
+
 end

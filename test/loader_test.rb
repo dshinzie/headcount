@@ -2,7 +2,7 @@ require_relative 'test_helper'
 require_relative '../lib/loader'
 
 class LoaderTest < Minitest::Test
-  
+
   def test_can_split_filenames_into_array
     file_hash = {
       :enrollment => {
@@ -164,6 +164,98 @@ class LoaderTest < Minitest::Test
     assert Loader.st.values.find{|e| e.name.upcase == 'COLORADO' && e.asian[2011][:writing] == 0.6569}
   end
 
+  def test_loader_adds_to_median_income_hash
+    test_hash = {:location => 'Test', :timeframe => '2005-2009', :dataformat => 'Currency', :data => 56222}
+    Loader.add_income_poverty_title(test_hash, :median_household_income, economic_profiles = {})
 
+    assert Loader.ep.values.find{|e| e.name.upcase == 'TEST' && e.median_household_income[[2005, 2009]] == 56222}
+  end
+
+  def test_loader_adds_to_median_income_hash_from_file
+    file_hash = {
+      :economic_profile => {
+        :median_household_income => "./fixture/Median household income.csv"
+      }
+    }
+    Loader.load_data_economic(file_hash, economic_profiles = {})
+
+    assert Loader.ep.values.find{|e| e.name.upcase == 'COLORADO' && e.median_household_income[[2005, 2009]] == 56222}
+    assert Loader.ep.values.find{|e| e.name.upcase == 'ACADEMY 20' && e.median_household_income[[2006, 2010]] == 85450}
+    assert Loader.ep.values.find{|e| e.name.upcase == 'AGATE 300' && e.median_household_income[[2009, 2013]] == 53125}
+  end
+
+  def test_loader_adds_to_children_in_poverty_hash
+    test_hash = {:location => 'Test', :timeframe => '2005', :dataformat => 'Percet', :data => 0.032}
+    Loader.add_income_poverty_title(test_hash, :children_in_poverty, economic_profiles = {})
+
+    assert Loader.ep.values.find{|e| e.name.upcase == 'TEST' && e.children_in_poverty[2005] == 0.032}
+  end
+
+  def test_loader_adds_to_children_in_poverty_hash_from_file
+    file_hash = {
+      :economic_profile => {
+        :children_in_poverty => "./fixture/School-aged children in poverty.csv"
+      }
+    }
+    Loader.load_data_economic(file_hash, economic_profiles = {})
+
+    assert Loader.ep.values.find{|e| e.name.upcase == 'ACADEMY 20' && e.children_in_poverty[2005] == 0.042}
+    assert Loader.ep.values.find{|e| e.name.upcase == 'ACADEMY 20' && e.children_in_poverty[2013] == 0.048}
+    assert Loader.ep.values.find{|e| e.name.upcase == 'ADAMS COUNTY 14' && e.children_in_poverty[2010] == 0.23185}
+  end
+
+  def test_loader_adds_to_title_hash
+    test_hash = {:location => 'Test', :timeframe => '2009', :dataformat => 'Percent', :data => 0.216}
+    Loader.add_income_poverty_title(test_hash, :title_i, economic_profiles = {})
+
+    assert Loader.ep.values.find{|e| e.name.upcase == 'TEST' && e.title_i[2009] == 0.216}
+  end
+
+  def test_loader_adds_to_title_hash_from_file
+    file_hash = {
+      :economic_profile => {
+        :title_i => "./fixture/Title I students.csv"
+      }
+    }
+    Loader.load_data_economic(file_hash, economic_profiles = {})
+
+    assert Loader.ep.values.find{|e| e.name.upcase == 'COLORADO' && e.title_i[2009] == 0.216}
+    assert Loader.ep.values.find{|e| e.name.upcase == 'ACADEMY 20' && e.title_i[2013] == 0.01246}
+    assert Loader.ep.values.find{|e| e.name.upcase == 'ADAMS COUNTY 14' && e.title_i[2014] == 0.66126}
+  end
+
+  def test_loader_adds_to_reduced_lunch_hash_for_percent
+    test_hash = {:location => 'Test', :poverty_level => 'Eligible for Free or Reduced Lunch',:timeframe => '2009', :dataformat => 'Percent', :data => 0.07}
+    Loader.add_reduced_price_lunch(test_hash, :free_or_reduced_price_lunch, economic_profiles = {})
+
+    assert Loader.ep.values.find{|e| e.name.upcase == 'TEST' && e.free_or_reduced_price_lunch[2009][:percentage] == 0.07}
+  end
+
+  def test_loader_adds_to_reduced_lunch_hash_for_total
+    test_hash = {:location => 'Test', :poverty_level => 'Eligible for Free or Reduced Lunch', :timeframe => '2009', :dataformat => 'Number', :data => 1234}
+    Loader.add_reduced_price_lunch(test_hash, :free_or_reduced_price_lunch, economic_profiles = {})
+
+    assert Loader.ep.values.find{|e| e.name.upcase == 'TEST' && e.free_or_reduced_price_lunch[2009][:total] == 1234}
+  end
+
+  def test_loader_adds_to_reduced_lunch_hash_only_both_free_or_reduced
+    test_hash2 = {:location => 'Test', :poverty_level => 'Eligible for Free', :timeframe => '2009', :dataformat => 'Number', :data => 1234}
+    Loader.add_reduced_price_lunch(test_hash2, :free_or_reduced_price_lunch, economic_profiles = {})
+
+    refute Loader.ep.values.find{|e| e.name.upcase == 'TEST'}
+  end
+
+  def test_loader_adds_to_reduced_lunch_hash_from_file
+    file_hash = {
+        :economic_profile => {
+          :free_or_reduced_price_lunch => "./fixture/Students qualifying for free or reduced price lunch.csv"
+        }
+      }
+    Loader.load_data_economic(file_hash, economic_profiles = {})
+
+    assert Loader.ep.values.find{|e| e.name.upcase == 'COLORADO' && e.free_or_reduced_price_lunch[2000] == {:percentage => 0.27, :total => 195149}}
+    assert Loader.ep.values.find{|e| e.name.upcase == 'COLORADO' && e.free_or_reduced_price_lunch[2003] == {:percentage => 0.30, :total => 228710}}
+    assert Loader.ep.values.find{|e| e.name.upcase == 'COLORADO' && e.free_or_reduced_price_lunch[2014] == {:percentage => 0.41593, :total => 369760}}
+  end
 
 end

@@ -1,6 +1,5 @@
 require_relative 'loader'
 require_relative 'custom_errors'
-require 'csv'
 require 'pry'
 
 class StatewideTest

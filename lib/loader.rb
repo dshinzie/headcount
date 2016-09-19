@@ -1,12 +1,14 @@
 require_relative 'district'
 require_relative 'enrollment_repository'
 require_relative 'statewide_test_repository'
+require_relative 'economic_profile_repository'
 require "csv"
+require 'pry'
 
 module Loader
   extend self
 
-  attr_reader :d, :e, :st, :test
+  attr_reader :d, :e, :st, :ep
 
   def extract_filenames(file_hash)
     filepaths = file_hash.values.map { |hash| hash.values}
@@ -57,7 +59,6 @@ module Loader
   def load_data_statewide(file_hash, statewide_tests)
     category_hash = file_hash[:statewide_testing]
     category_hash.each do |category, filepath|
-      #category = key.to_sym
       contents = Loader.csv_parse(filepath)
       contents.each do |row|
         if category == :third_grade || category == :eighth_grade
@@ -93,6 +94,47 @@ module Loader
     statewide_tests[name.upcase].send(race)[year] ||= {}
     statewide_tests[name.upcase].send(race)[year][category] = data
     @st = statewide_tests
+  end
+
+  def load_data_economic(file_hash, economic_profiles)
+    category_hash = file_hash[:economic_profile]
+    category_hash.each do |category, filepath|
+      contents = Loader.csv_parse(filepath)
+      contents.each do |row|
+        if category == :free_or_reduced_price_lunch
+          add_reduced_price_lunch(row, category, economic_profiles)
+        elsif row[:dataformat].downcase != 'number' #come back to this
+          add_income_poverty_title(row, category, economic_profiles)
+        end
+      end
+    end
+  end
+
+  def add_income_poverty_title(row, category, economic_profiles)
+    name = row[:location]
+    year = Sanitizer.sanitize_years(row[:timeframe])
+    data = row[:data].to_f
+
+    economic_profiles[name.upcase] ||= EconomicProfile.new({name: name})
+    economic_profiles[name.upcase].send(category)[year] ||= {}
+    economic_profiles[name.upcase].send(category)[year] = data
+    @ep = economic_profiles
+  end
+
+  def add_reduced_price_lunch(row, category, economic_profiles)
+    name = row[:location]
+    year = Sanitizer.sanitize_years(row[:timeframe])
+    percent = row[:data].to_f if row[:dataformat].downcase == 'percent'
+    total = row[:data].to_i if row[:dataformat].downcase == 'number'
+    poverty_level = row[:poverty_level].downcase
+
+    if poverty_level.include?('free or reduced')
+      economic_profiles[name.upcase] ||= EconomicProfile.new({name: name})
+      economic_profiles[name.upcase].send(category)[year] ||= {}
+      economic_profiles[name.upcase].send(category)[year][:percentage] = percent unless percent.nil?
+      economic_profiles[name.upcase].send(category)[year][:total] = total unless total.nil?
+    end
+    @ep = economic_profiles
   end
 
 end
