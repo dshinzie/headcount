@@ -1,6 +1,6 @@
 
 class UnknownDataError < StandardError
-  def initialize(msg="Only use grades 3 or 8")
+  def initialize(msg="Invalid input.")
     super
   end
 end

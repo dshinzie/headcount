@@ -20,7 +20,7 @@ class EconomicProfileTest < Minitest::Test
     @ep3 = @epr.find_by_name('AGATE 300')
     @ep4 = @epr.find_by_name('COLORADO')
   end
-
+  
   def test_can_get_average_income_in_year
     assert_equal 85060, ep.median_household_income_in_year(2005)
     assert_equal 41305.20, ep2.median_household_income_in_year(2009)
@@ -58,5 +58,34 @@ class EconomicProfileTest < Minitest::Test
     assert_equal 0.23178, ep4.title_i_in_year(2013)
   end
 
+  def test_raises_error_if_invalid_input_median_income
+    assert_raises(UnknownDataError) {ep.median_household_income_in_year(1884)}
+    assert_raises(UnknownDataError) {ep.median_household_income_in_year(1987)}
+    assert_raises(UnknownDataError) {ep.median_household_income_in_year(2052)}
+  end
+
+  def test_raises_error_if_invalid_input_children_in_poverty
+    assert_raises(UnknownDataError) {ep.children_in_poverty_in_year(1884)}
+    assert_raises(UnknownDataError) {ep.children_in_poverty_in_year(1990)}
+    assert_raises(UnknownDataError) {ep.children_in_poverty_in_year(2064)}
+  end
+
+  def test_raises_error_if_invalid_input_reduced_free_lunch_percentage
+    assert_raises(UnknownDataError) {ep4.free_or_reduced_price_lunch_percentage_in_year(1884)}
+    assert_raises(UnknownDataError) {ep4.free_or_reduced_price_lunch_percentage_in_year(1990)}
+    assert_raises(UnknownDataError) {ep4.free_or_reduced_price_lunch_percentage_in_year(2152)}
+  end
+
+  def test_raises_error_if_invalid_input_reduced_free_lunch_total
+    assert_raises(UnknownDataError) {ep4.free_or_reduced_price_lunch_number_in_year(1884)}
+    assert_raises(UnknownDataError) {ep4.free_or_reduced_price_lunch_number_in_year(1990)}
+    assert_raises(UnknownDataError) {ep4.free_or_reduced_price_lunch_number_in_year(2152)}
+  end
+
+  def test_raises_error_if_invalid_input_title_i
+    assert_raises(UnknownDataError) {ep4.title_i_in_year(1884)}
+    assert_raises(UnknownDataError) {ep4.title_i_in_year(1990)}
+    assert_raises(UnknownDataError) {ep4.title_i_in_year(2152)}
+  end
 
 end

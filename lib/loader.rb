@@ -1,7 +1,8 @@
 require_relative 'district'
-require_relative 'enrollment_repository'
-require_relative 'statewide_test_repository'
-require_relative 'economic_profile_repository'
+require_relative 'enrollment'
+require_relative 'statewide_test'
+require_relative 'economic_profile'
+require_relative 'sanitizer'
 require "csv"
 require 'pry'
 
@@ -32,7 +33,6 @@ module Loader
   def add_district(row, districts)
     name = row[:location].upcase
     districts[name] ||= District.new( { name: name } )
-    @d = districts
   end
 
   def load_data_enrollment(file_hash, enrollments)
@@ -53,7 +53,6 @@ module Loader
 
     enrollments[name.upcase] ||= Enrollment.new({name: name })
     enrollments[name.upcase].send(category)[year] = data
-    @e = enrollments
   end
 
   def load_data_statewide(file_hash, statewide_tests)
@@ -80,7 +79,6 @@ module Loader
     statewide_tests[name.upcase] ||= StatewideTest.new({name: name })
     statewide_tests[name.upcase].send(category)[year] ||= {}
     statewide_tests[name.upcase].send(category)[year][proficiency] = data
-    @st = statewide_tests
   end
 
   def add_testing_by_ethnicity(row, category, statewide_tests)
@@ -90,10 +88,9 @@ module Loader
     data = row[:data].to_f
 
     statewide_tests[name.upcase] ||= StatewideTest.new({name: name })
-    statewide_tests[name.upcase].instance_variable_set("@#{race}", {}) if !statewide_tests[name.upcase].instance_variable_defined?("@#{race}")
+    # statewide_tests[name.upcase].instance_variable_set("@#{race}", {}) if !statewide_tests[name.upcase].instance_variable_defined?("@#{race}")
     statewide_tests[name.upcase].send(race)[year] ||= {}
     statewide_tests[name.upcase].send(race)[year][category] = data
-    @st = statewide_tests
   end
 
   def load_data_economic(file_hash, economic_profiles)
@@ -118,7 +115,6 @@ module Loader
     economic_profiles[name.upcase] ||= EconomicProfile.new({name: name})
     economic_profiles[name.upcase].send(category)[year] ||= {}
     economic_profiles[name.upcase].send(category)[year] = data
-    @ep = economic_profiles
   end
 
   def add_reduced_price_lunch(row, category, economic_profiles)
@@ -134,7 +130,6 @@ module Loader
       economic_profiles[name.upcase].send(category)[year][:percentage] = percent unless percent.nil?
       economic_profiles[name.upcase].send(category)[year][:total] = total unless total.nil?
     end
-    @ep = economic_profiles
   end
 
 end

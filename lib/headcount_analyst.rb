@@ -1,5 +1,6 @@
 require 'pry'
 require_relative 'district_repository'
+require_relative 'economic_profile_repository'
 require_relative 'sanitizer'
 
 class HeadcountAnalyst
@@ -69,10 +70,13 @@ class HeadcountAnalyst
   end
 
   def calculate_percentage_correlated(districts)
-    counter = 0
-    districts.each do |district|
-      counter += 1 if calculate_correlation(district)
+    total_true = districts.map do |district|
+      calculate_correlation(district)
     end
-    counter.to_f / districts.length.to_f >= 0.70 ? true : false
+    (total_true.count(true) / total_true.count) >= 0.70
+  end
+
+  def high_poverty_and_high_school_graduation
+
   end
 end
