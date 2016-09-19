@@ -90,7 +90,22 @@ class DistrictRepositoryTest < Minitest::Test
 
     test_list.each { |name| assert dr.districts.values.find{|district| district.statewide_test.name == name.upcase }}
     #dr.districts.values.each {|district| refute district.statewide_test.nil?}
+  end
 
+  def test_economic_profile_is_linked_after_loading
+    dr = DistrictRepository.new
+    dr.load_data({
+        :economic_profile => {
+          :median_household_income => "./data/Median household income.csv",
+          :children_in_poverty => "./data/School-aged children in poverty.csv",
+          :free_or_reduced_price_lunch => "./data/Students qualifying for free or reduced price lunch.csv",
+          :title_i => "./data/Title I students.csv"
+        }
+      })
+
+      test_list = ['Colorado', 'ACADEMY 20', 'Agate 300']
+
+      test_list.each { |name| assert dr.districts.values.find{|district| district.economic_profile.name == name.upcase }}
   end
 
 end
