@@ -7,7 +7,7 @@ class StatewideTestRepositoryTest < Minitest::Test
     str = StatewideTestRepository.new
 
     assert_equal ({}), str.statewide_tests
-end
+  end
 
   def test_it_loads_single_file
     str = StatewideTestRepository.new
@@ -65,5 +65,4 @@ end
     assert st.third_grade
     assert st.white[2011][:math]
   end
-
 end

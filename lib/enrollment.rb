@@ -30,11 +30,8 @@ class Enrollment
   end
 
   def safe_year_retrieval(data_hash, year)
-    unless data_hash.has_key?(year)
-      return nil
-    else
-      Sanitizer.truncate(data_hash[year])
-    end
+    return nil if !data_hash[year]
+    Sanitizer.truncate(data_hash[year])
   end
 
 end

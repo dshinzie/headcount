@@ -56,7 +56,7 @@ class StatewideTestTest < Minitest::Test
   def test_proficient_for_subject_race_year_returns_value_by_parameters
     assert_equal 0.818, st.proficient_for_subject_by_race_in_year(:math, :asian, 2012)
   end
-  
+
   def test_proficient_by_grade_raises_error_if_grade_not_3_or_8
     assert_raises(UnknownDataError) {st.proficient_by_grade(4)}
     assert_raises(UnknownDataError) {st.proficient_by_grade(123)}

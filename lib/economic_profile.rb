@@ -1,4 +1,3 @@
-require_relative 'loader'
 require_relative 'custom_errors'
 require 'pry'
 
@@ -19,10 +18,10 @@ class EconomicProfile
   end
 
   def median_household_income_in_year(year)
-    #raise UnknownDataError unless median_household_income.keys.include?(year)
+    raise UnknownDataError unless median_household_income.keys.find{ |years| years.include?(year)}
 
     count = 0
-    results = median_household_income.inject(0) do |sum, (k, v)|
+    median_household_income.inject(0) do |sum, (k, v)|
       range = (k.first..k.last).to_a
       count += 1 if range.include?(year)
       sum += v if range.include?(year)
@@ -37,18 +36,26 @@ class EconomicProfile
   end
 
   def children_in_poverty_in_year(year)
+    raise UnknownDataError unless children_in_poverty.keys.include?(year)
+
     children_in_poverty[year]
   end
 
   def free_or_reduced_price_lunch_percentage_in_year(year)
+    raise UnknownDataError unless free_or_reduced_price_lunch.keys.include?(year)
+
     free_or_reduced_price_lunch[year][:percentage]
   end
 
   def free_or_reduced_price_lunch_number_in_year(year)
+    raise UnknownDataError unless free_or_reduced_price_lunch.keys.include?(year)
+
     free_or_reduced_price_lunch[year][:total]
   end
 
   def title_i_in_year(year)
+    raise UnknownDataError unless title_i.keys.include?(year)
+
     title_i[year]
   end
 
