@@ -18,7 +18,8 @@ extend self
   def sanitize_nested_hash(parent, data_hash, first_run)
     @nested = {} if first_run
     data_hash.each do |key, value|
-      value.is_a?(Hash) ? sanitize_nested_hash(key, value, false) : data_hash[key] = Sanitizer.truncate(value)
+      value.is_a?(Hash) ? sanitize_nested_hash(key, value, false)
+      : data_hash[key] = Sanitizer.truncate(value)
     end
     @nested[parent] = data_hash unless parent.nil?
     @nested

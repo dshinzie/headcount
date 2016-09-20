@@ -20,8 +20,10 @@ class DistrictRepository
   def load_data(file_hash)
     Loader.load_data_district(file_hash, @districts)
     @enrollment.load_data(file_hash) if file_hash.keys.include?(:enrollment)
-    @statewide_test.load_data(file_hash) if file_hash.keys.include?(:statewide_testing)
-    @economic_profile.load_data(file_hash) if file_hash.keys.include?(:economic_profile)
+    @statewide_test.load_data(file_hash) if
+    file_hash.keys.include?(:statewide_testing)
+    @economic_profile.load_data(file_hash) if
+    file_hash.keys.include?(:economic_profile)
     link_enrollments
     link_statewide_tests
     link_economic_profiles
