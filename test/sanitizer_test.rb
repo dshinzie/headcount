@@ -12,6 +12,7 @@ class SanitizerTest < Minitest::Test
   end
 
   def test_can_sanitize_hash
+    skip
     test_hash = {:math=>0.7094, :reading=>0.7482, :writing=>0.6569}
   end
 

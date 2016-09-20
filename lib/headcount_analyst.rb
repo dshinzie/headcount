@@ -2,6 +2,9 @@ require 'pry'
 require_relative 'district_repository'
 require_relative 'economic_profile_repository'
 require_relative 'sanitizer'
+require_relative 'result_entry'
+require_relative 'result_set'
+
 
 class HeadcountAnalyst
   include Sanitizer
@@ -78,33 +81,68 @@ class HeadcountAnalyst
   end
 
   def high_poverty_and_high_school_graduation
-    #Above the statewide average in number of students qualifying for free and reduced price lunch
-    # Above the statewide average percentage of school-aged children in poverty
-    # Above the statewide average high school graduation rate
-  end
-
-  def district_against_state_poverty_variation
-    districts_high_poverty = []
-
-    # state_average_percent = find_average_free_reduced_lunch("COLORADO", :percentage)
-    state_average = get_average_lunch("COLORADO", :total)
-    binding.pry
-
-    dr.districts.keys.each do |district|
-      district_average = get_average_lunch(district, :total)
-      districts_high_poverty << district if district_average > state_average
+    statewide = statewide_average()
+    results = []
+    @dr.districts.keys.each do |district_name|
+      result_entry = district_result_entry(district_name)
+      results << result_entry if result_entry.bigger_than(statewide)
     end
-    districts_high_poverty
-    binding.pry
+    ResultSet.new(matching_districts: results, statewide_average: statewide)
   end
 
-  def get_average_lunch(district, data_type)
-    district = @dr.find_by_name(district)
-    results = district.economic_profile.free_or_reduced_price_lunch.values
-
-    return truncate(results.map { |x| x[data_type].to_f }.reduce(:+) / results.size) if district.name.upcase != "COLORADO"
-    return truncate(results.map { |x| x[data_type].to_f }.reduce(:+) / results.size / @dr.districts.size) if district.name.upcase == "COLORADO"
+  def district_result_entry(district_name)
+    ResultEntry.new({
+      free_and_reduced_price_lunch_rate: get_lunch_average(district_name),
+      children_in_poverty_rate: get_poverty_average(district_name),
+      high_school_graduation_rate: get_average_hs_graduation_rate(district_name),
+      name: district_name})
   end
 
+  def statewide_average
+    ResultEntry.new({
+      free_and_reduced_price_lunch_rate: get_lunch_average(),
+      children_in_poverty_rate: get_statewide_poverty,
+      high_school_graduation_rate: get_average_hs_graduation_rate,
+      name: 'COLORADO' })
+  end
 
+  def get_average_hs_graduation_rate(district_name = 'COLORADO')
+    district = @dr.find_by_name(district_name)
+    all_years = district.enrollment.high_school_graduation_participation.values
+    total = all_years.reduce(:+)
+    total = total / all_years.count
+    total = total / @dr.districts.keys.count if district_name == 'COLORADO'
+    total
+  end
+
+  def get_statewide_poverty
+    district_names = @dr.districts.keys
+    count = 0
+    total = 0
+    district_names.each do |district_name|
+      avg = get_poverty_average(district_name)
+      unless avg.nil?
+        count += 1
+        total += avg
+      end
+    end
+    total / count
+  end
+
+  def get_poverty_average(district_name)
+    district = @dr.find_by_name(district_name)
+    all_data = district.economic_profile.children_in_poverty.values
+    return nil if all_data.count == 0
+    all_data.reduce(:+) / all_data.size
+  end
+
+  def get_lunch_average(district_name = "COLORADO")
+    district = @dr.find_by_name(district_name)
+    all_data = district.economic_profile.free_or_reduced_price_lunch.values
+    return nil if all_data.count == 0
+    total = all_data.map { |data| data[:total] } .reduce(:+)
+    total = total / all_data.size
+    total = total / @dr.districts.keys.count if district_name == 'COLORADO'
+    total
+  end
 end
