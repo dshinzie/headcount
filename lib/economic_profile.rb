@@ -13,12 +13,14 @@ class EconomicProfile
     @name = input_hash[:name].upcase || {}
     @median_household_income = input_hash[:median_household_income] || {}
     @children_in_poverty = input_hash[:children_in_poverty] || {}
-    @free_or_reduced_price_lunch = input_hash[:free_or_reduced_price_lunch] || {}
+    @free_or_reduced_price_lunch =
+    input_hash[:free_or_reduced_price_lunch] || {}
     @title_i = input_hash[:title_i] || {}
   end
 
   def median_household_income_in_year(year)
-    raise UnknownDataError unless median_household_income.keys.find{ |years| years.include?(year)}
+    raise UnknownDataError unless median_household_income.keys.find{ |years|
+      years.include?(year)}
 
     count = 0
     median_household_income.inject(0) do |sum, (k, v)|
@@ -31,7 +33,7 @@ class EconomicProfile
 
   def median_household_income_average
     median_household_income.reduce(0) do |sum, (k, v)|
-    	sum += v
+      sum += v
     end / median_household_income.keys.count
   end
 
@@ -42,13 +44,15 @@ class EconomicProfile
   end
 
   def free_or_reduced_price_lunch_percentage_in_year(year)
-    raise UnknownDataError unless free_or_reduced_price_lunch.keys.include?(year)
+    raise UnknownDataError unless
+    free_or_reduced_price_lunch.keys.include?(year)
 
     free_or_reduced_price_lunch[year][:percentage]
   end
 
   def free_or_reduced_price_lunch_number_in_year(year)
-    raise UnknownDataError unless free_or_reduced_price_lunch.keys.include?(year)
+    raise UnknownDataError unless
+    free_or_reduced_price_lunch.keys.include?(year)
 
     free_or_reduced_price_lunch[year][:total]
   end
@@ -58,6 +62,4 @@ class EconomicProfile
 
     title_i[year]
   end
-
-
 end

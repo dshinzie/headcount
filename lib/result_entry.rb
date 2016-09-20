@@ -9,7 +9,8 @@ class ResultEntry
               :name
 
   def initialize(input_hash)
-    @free_and_reduced_price_lunch_rate = input_hash[:free_and_reduced_price_lunch_rate]
+    @free_and_reduced_price_lunch_rate =
+    input_hash[:free_and_reduced_price_lunch_rate]
     @children_in_poverty_rate = input_hash[:children_in_poverty_rate]
     @high_school_graduation_rate = input_hash[:high_school_graduation_rate]
     @median_household_income = input_hash[:median_household_income]
@@ -17,7 +18,8 @@ class ResultEntry
   end
 
   def bigger_than(re)
-    self.free_and_reduced_price_lunch_rate > re.free_and_reduced_price_lunch_rate &&
+    self.free_and_reduced_price_lunch_rate >
+    re.free_and_reduced_price_lunch_rate &&
     self.children_in_poverty_rate > re.children_in_poverty_rate &&
     self.high_school_graduation_rate > re.high_school_graduation_rate
   end

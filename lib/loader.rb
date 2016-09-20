@@ -88,7 +88,7 @@ module Loader
     data = row[:data].to_f
 
     statewide_tests[name.upcase] ||= StatewideTest.new({name: name })
-    # statewide_tests[name.upcase].instance_variable_set("@#{race}", {}) if !statewide_tests[name.upcase].instance_variable_defined?("@#{race}")
+
     statewide_tests[name.upcase].send(race)[year] ||= {}
     statewide_tests[name.upcase].send(race)[year][category] = data
   end
@@ -127,8 +127,10 @@ module Loader
     if poverty_level.include?('free or reduced')
       economic_profiles[name.upcase] ||= EconomicProfile.new({name: name})
       economic_profiles[name.upcase].send(category)[year] ||= {}
-      economic_profiles[name.upcase].send(category)[year][:percentage] = percent unless percent.nil?
-      economic_profiles[name.upcase].send(category)[year][:total] = total unless total.nil?
+      economic_profiles[name.upcase].send(category)[year][:percentage] =
+      percent unless percent.nil?
+      economic_profiles[name.upcase].send(category)[year][:total] =
+      total unless total.nil?
     end
   end
 

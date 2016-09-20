@@ -52,17 +52,20 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_against_high_school_graduation(district)
-    kindergarten_variation = kindergarten_participation_rate_variation(district, :against => "COLORADO")
-    graduation_variation = high_school_participation_rate_variation(district, :against => "COLORADO")
+    kindergarten_variation =
+    kindergarten_participation_rate_variation(district, :against => "COLORADO")
+    graduation_variation =
+    high_school_participation_rate_variation(district, :against => "COLORADO")
 
-    graduation_variation == 0 ? 0 : Sanitizer.truncate(kindergarten_variation / graduation_variation)
+    graduation_variation == 0 ? 0 :
+    Sanitizer.truncate(kindergarten_variation / graduation_variation)
   end
 
-  def kindergarten_participation_correlates_with_high_school_graduation(location)
-    if location.has_key? :across
-      calculate_percentage_correlated(location[:across])
-    elsif location[:for].upcase != 'STATEWIDE'
-      calculate_correlation(location[:for])
+  def kindergarten_participation_correlates_with_high_school_graduation(loc)
+    if loc.has_key? :across
+      calculate_percentage_correlated(loc[:across])
+    elsif loc[:for].upcase != 'STATEWIDE'
+      calculate_correlation(loc[:for])
     else
       calculate_percentage_correlated(@dr.districts.keys)
     end
@@ -94,7 +97,8 @@ class HeadcountAnalyst
     ResultEntry.new({
       free_and_reduced_price_lunch_rate: get_lunch_average(district_name),
       children_in_poverty_rate: get_poverty_average(district_name),
-      high_school_graduation_rate: get_average_hs_graduation_rate(district_name),
+      high_school_graduation_rate:
+      get_average_hs_graduation_rate(district_name),
       name: district_name})
   end
 
