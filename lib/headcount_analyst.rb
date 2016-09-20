@@ -105,7 +105,6 @@ class HeadcountAnalyst
     (total_true.count(true) / total_true.count) >= 0.70
   end
 
-
   def high_poverty_and_high_school_graduation
     statewide = statewide_average()
     results = []
@@ -134,12 +133,10 @@ class HeadcountAnalyst
 
     median_income_variation = find_median_income_rate_variation(district)
 
-    result = Sanitizer.truncate(kindergarten_variation/median_income_variation)
-    binding.pry
+    Sanitizer.truncate(kindergarten_variation/median_income_variation)
   end
 
   def find_median_income_rate_variation(district)
-
   district = @dr.find_by_name(district)
   district_average = district.economic_profile.median_household_income_average
 

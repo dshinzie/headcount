@@ -10,7 +10,7 @@ class EconomicProfile
               :title_i
 
   def initialize(input_hash)
-    @name = input_hash[:name].upcase || {}
+    @name = input_hash[:name].upcase || {} if !input_hash[:name].nil?
     @median_household_income = input_hash[:median_household_income] || {}
     @children_in_poverty = input_hash[:children_in_poverty] || {}
     @free_or_reduced_price_lunch =
