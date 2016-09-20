@@ -210,9 +210,7 @@ class HeadcountAnalyst
     district = @dr.find_by_name(district_name)
     all_data = district.economic_profile.median_household_income.values
     return nil if all_data.count == 0
-    total = all_data.reduce(:+) / all_data.size
-    total = total / @dr.districts.keys.count if district_name == "COLORADO"
-    total
+    all_data.reduce(:+) / all_data.size
   end
 
 

@@ -21,7 +21,7 @@ class HeadcountAnalystTest < Minitest::Test
         })
 
   end
-  
+
   def test_enrollment_loads_with_district_repo_load
     refute dr.enrollment.nil?
   end
@@ -153,10 +153,9 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_returns_median_income
-    skip
     ha = HeadcountAnalyst.new(dr)
 
-    assert_equal 12345, rs = ha.get_median_income_average
+    assert_equal 57408, rs = ha.get_median_income_average
   end
 
   def test_returns_result_set_for_poverty_income
