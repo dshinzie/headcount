@@ -4,9 +4,9 @@ require_relative 'statewide_test'
 require_relative 'economic_profile'
 require_relative 'sanitizer'
 require "csv"
-require 'pry'
 
 module Loader
+  include Sanitizer
   extend self
 
   attr_reader :d, :e, :st, :ep
@@ -21,9 +21,9 @@ module Loader
   end
 
   def load_data_district(file_hash, districts)
-    filepaths = Loader.extract_filenames(file_hash)
+    filepaths = extract_filenames(file_hash)
     filepaths.each do |filepath|
-      contents = Loader.csv_parse(filepath)
+      contents = csv_parse(filepath)
       contents.each do |row|
         add_district(row, districts)
       end
@@ -39,7 +39,7 @@ module Loader
     school_level_hash = file_hash[:enrollment]
     school_level_hash.each do |key, filepath|
       category = key.to_s + "_participation"
-      contents = Loader.csv_parse(filepath)
+      contents = csv_parse(filepath)
       contents.each do |row|
         add_enrollment(row, category, enrollments)
       end
@@ -58,7 +58,7 @@ module Loader
   def load_data_statewide(file_hash, statewide_tests)
     category_hash = file_hash[:statewide_testing]
     category_hash.each do |category, filepath|
-      contents = Loader.csv_parse(filepath)
+      contents = csv_parse(filepath)
       contents.each do |row|
         if category == :third_grade || category == :eighth_grade
           add_testing_by_proficiency(row, category, statewide_tests)
@@ -72,7 +72,7 @@ module Loader
 
   def add_testing_by_proficiency(row, category, statewide_tests)
     name = row[:location]
-    proficiency = Sanitizer.sanitize_symbols(row[:score])
+    proficiency = sanitize_symbols(row[:score])
     year = row[:timeframe].to_i
     data = row[:data].to_f
 
@@ -83,12 +83,11 @@ module Loader
 
   def add_testing_by_ethnicity(row, category, statewide_tests)
     name = row[:location]
-    race = Sanitizer.sanitize_symbols(row[:race_ethnicity])
+    race = sanitize_symbols(row[:race_ethnicity])
     year = row[:timeframe].to_i
     data = row[:data].to_f
 
     statewide_tests[name.upcase] ||= StatewideTest.new({name: name })
-
     statewide_tests[name.upcase].send(race)[year] ||= {}
     statewide_tests[name.upcase].send(race)[year][category] = data
   end
@@ -96,11 +95,11 @@ module Loader
   def load_data_economic(file_hash, economic_profiles)
     category_hash = file_hash[:economic_profile]
     category_hash.each do |category, filepath|
-      contents = Loader.csv_parse(filepath)
+      contents = csv_parse(filepath)
       contents.each do |row|
         if category == :free_or_reduced_price_lunch
           add_reduced_price_lunch(row, category, economic_profiles)
-        elsif row[:dataformat].downcase != 'number' #come back to this
+        elsif row[:dataformat].downcase != 'number'
           add_income_poverty_title(row, category, economic_profiles)
         end
       end
@@ -109,7 +108,7 @@ module Loader
 
   def add_income_poverty_title(row, category, economic_profiles)
     name = row[:location]
-    year = Sanitizer.sanitize_years(row[:timeframe])
+    year = sanitize_years(row[:timeframe])
     data = row[:data].to_f
 
     economic_profiles[name.upcase] ||= EconomicProfile.new({name: name})
@@ -119,7 +118,7 @@ module Loader
 
   def add_reduced_price_lunch(row, category, economic_profiles)
     name = row[:location]
-    year = Sanitizer.sanitize_years(row[:timeframe])
+    year = sanitize_years(row[:timeframe])
     percent = row[:data].to_f if row[:dataformat].downcase == 'percent'
     total = row[:data].to_i if row[:dataformat].downcase == 'number'
     poverty_level = row[:poverty_level].downcase
@@ -127,8 +126,10 @@ module Loader
     if poverty_level.include?('free or reduced')
       economic_profiles[name.upcase] ||= EconomicProfile.new({name: name})
       economic_profiles[name.upcase].send(category)[year] ||= {}
+
       economic_profiles[name.upcase].send(category)[year][:percentage] =
       percent unless percent.nil?
+
       economic_profiles[name.upcase].send(category)[year][:total] =
       total unless total.nil?
     end

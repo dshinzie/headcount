@@ -24,6 +24,18 @@ class ResultSetTest < Minitest::Test
     @ha
   end
 
+  def test_can_assign_matching_districts
+    rs = ResultSet.new({matching_districts: "test"})
+
+    assert_equal "test", rs.matching_districts
+  end
+
+  def test_can_assign_statewide_average
+    rs = ResultSet.new({statewide_average: "test"})
+
+    assert_equal "test", rs.statewide_average
+  end
+
   def test_matching_districts_returns_free_reduced_lunch
     r1 = ResultEntry.new({free_and_reduced_price_lunch_rate: 0.5})
     rs = ResultSet.new(matching_districts: [r1])

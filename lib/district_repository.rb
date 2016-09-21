@@ -3,10 +3,9 @@ require_relative 'enrollment_repository'
 require_relative 'statewide_test_repository'
 require_relative 'economic_profile'
 require_relative 'loader'
-require 'csv'
-require 'pry'
 
 class DistrictRepository
+  include Loader
 
   attr_reader :districts, :enrollment, :statewide_test, :economic_profile
 
@@ -18,12 +17,11 @@ class DistrictRepository
   end
 
   def load_data(file_hash)
-    Loader.load_data_district(file_hash, @districts)
-    @enrollment.load_data(file_hash) if file_hash.keys.include?(:enrollment)
-    @statewide_test.load_data(file_hash) if
-    file_hash.keys.include?(:statewide_testing)
-    @economic_profile.load_data(file_hash) if
-    file_hash.keys.include?(:economic_profile)
+    load_data_district(file_hash, @districts)
+    keys = file_hash.keys
+    @enrollment.load_data(file_hash) if keys.include?(:enrollment)
+    @statewide_test.load_data(file_hash) if keys.include?(:statewide_testing)
+    @economic_profile.load_data(file_hash) if keys.include?(:economic_profile)
     link_enrollments
     link_statewide_tests
     link_economic_profiles
@@ -58,7 +56,6 @@ class DistrictRepository
     ep.each do |name, economic_object|
       find_by_name(name).economic_profile = economic_object
     end
-
   end
 
 end

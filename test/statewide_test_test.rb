@@ -26,7 +26,7 @@ class StatewideTestTest < Minitest::Test
     assert st.proficient_by_grade(3).instance_of?(Hash)
   end
 
-  def test_proficient_by_grade_returns_third_grade_hash
+  def test_proficient_by_grade_returns_grade_hash
     expected = { 2008 => {:math => 0.857, :reading => 0.866, :writing => 0.671},
                  2009 => {:math => 0.824, :reading => 0.862, :writing => 0.706},
                  2010 => {:math => 0.849, :reading => 0.864, :writing => 0.662},

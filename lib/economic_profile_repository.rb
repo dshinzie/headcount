@@ -1,6 +1,5 @@
-require_relative 'economic_profile'
-
 class EconomicProfileRepository
+
   attr_reader :economic_profiles
 
   def initialize

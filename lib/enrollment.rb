@@ -1,7 +1,7 @@
-require 'csv'
 require_relative 'sanitizer'
 
 class Enrollment
+  include Sanitizer
 
   attr_reader :name
 
@@ -16,11 +16,11 @@ class Enrollment
   end
 
   def kindergarten_participation_by_year
-    Sanitizer.sanitize_hash(@kindergarten_participation)
+    sanitize_hash(@kindergarten_participation)
   end
 
   def graduation_rate_by_year
-    Sanitizer.sanitize_hash(@high_school_graduation_participation)
+    sanitize_hash(@high_school_graduation_participation)
   end
 
   def kindergarten_participation_in_year(year)
@@ -33,7 +33,7 @@ class Enrollment
 
   def safe_year_retrieval(data_hash, year)
     return nil if !data_hash[year]
-    Sanitizer.truncate(data_hash[year])
+    truncate(data_hash[year])
   end
 
 end

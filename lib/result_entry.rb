@@ -1,5 +1,3 @@
-require "pry"
-
 class ResultEntry
 
   attr_reader :free_and_reduced_price_lunch_rate,

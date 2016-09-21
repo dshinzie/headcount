@@ -1,5 +1,4 @@
 require_relative 'custom_errors'
-require 'pry'
 
 class EconomicProfile
 
@@ -19,8 +18,9 @@ class EconomicProfile
   end
 
   def median_household_income_in_year(year)
-    raise UnknownDataError unless median_household_income.keys.find{ |years|
-      years.include?(year)}
+    raise UnknownDataError unless median_household_income.keys.find do |years|
+      years.include?(year)
+    end
 
     count = 0
     median_household_income.inject(0) do |sum, (k, v)|
@@ -62,4 +62,5 @@ class EconomicProfile
 
     title_i[year]
   end
+
 end
