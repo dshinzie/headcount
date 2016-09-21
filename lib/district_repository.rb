@@ -1,7 +1,7 @@
 require_relative 'district'
 require_relative 'enrollment_repository'
 require_relative 'statewide_test_repository'
-require_relative 'economic_profile'
+require_relative 'economic_profile_repository'
 require_relative 'loader'
 
 class DistrictRepository

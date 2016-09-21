@@ -1,4 +1,3 @@
-
 class UnknownDataError < StandardError
   def initialize(msg="Invalid input.")
     super
