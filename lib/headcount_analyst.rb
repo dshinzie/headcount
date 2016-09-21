@@ -43,7 +43,7 @@ class HeadcountAnalyst
   def find_average_participation(name, grade_level)
     results = @dr.find_by_name(name).enrollment.send(grade_level).values
     average = results.reduce(0) {|sum, rate| sum += rate}.to_f / results.size
-    truncate(average)
+    average
   end
 
   def kindergarten_participation_rate_variation_trend(district, location)
@@ -58,7 +58,7 @@ class HeadcountAnalyst
     e1.keys.each do |year|
       variation_hash[year] = truncate(e1[year] / e2[year])
     end
-    variation_hash
+    variation_hash.sort.to_h
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(loc)
@@ -130,7 +130,7 @@ class HeadcountAnalyst
         total += avg
       end
     end
-    total / count
+    truncate(total / count)
   end
 
   def district_result_entry(district_name)
@@ -150,14 +150,14 @@ class HeadcountAnalyst
     total = all_data.map { |data| data[:total] } .reduce(:+)
     total = total / all_data.size
     total = total / @dr.districts.keys.count if district_name == 'COLORADO'
-    total
+    truncate(total)
   end
 
   def get_poverty_average(district_name)
     district = @dr.find_by_name(district_name)
     all_data = district.economic_profile.children_in_poverty.values
     return nil if all_data.count == 0
-    all_data.reduce(:+) / all_data.size
+    truncate(all_data.reduce(:+) / all_data.size)
   end
 
   def get_average_hs_graduation_rate(district_name = 'COLORADO')
@@ -166,14 +166,14 @@ class HeadcountAnalyst
     total = all_years.reduce(:+)
     total = total / all_years.count
     total = total / @dr.districts.keys.count if district_name == 'COLORADO'
-    total
+    truncate(total)
   end
 
   def get_median_income_average(district_name = "COLORADO")
     district = @dr.find_by_name(district_name)
     all_data = district.economic_profile.median_household_income.values
     return nil if all_data.count == 0
-    all_data.reduce(:+) / all_data.size
+    truncate(all_data.reduce(:+) / all_data.size)
   end
 
   def high_income_disparity
@@ -194,6 +194,7 @@ class HeadcountAnalyst
 
     median_income_variation = find_median_income_rate_variation(district)
 
+    median_income_variation == 0 ? 0 :
     truncate(kindergarten_variation/median_income_variation)
   end
 

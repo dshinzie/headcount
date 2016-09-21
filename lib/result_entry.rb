@@ -1,4 +1,7 @@
+require_relative 'Sanitizer'
+
 class ResultEntry
+  include Sanitizer
 
   attr_reader :free_and_reduced_price_lunch_rate,
               :children_in_poverty_rate,

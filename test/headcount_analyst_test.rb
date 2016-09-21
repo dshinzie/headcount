@@ -29,21 +29,21 @@ class HeadcountAnalystTest < Minitest::Test
   def test_it_finds_average_kindergarten_participation
     ha = HeadcountAnalyst.new(dr)
 
-    assert_equal 0.530 , ha.find_average_participation("COLORADO", :kindergarten_participation)
-    assert_equal 0.406 , ha.find_average_participation("ACADEMY 20", :kindergarten_participation)
+    assert_equal 0.530 , ha.find_average_participation("COLORADO", :kindergarten_participation).round(3)
+    assert_equal 0.406 , ha.find_average_participation("ACADEMY 20", :kindergarten_participation).round(3)
   end
 
   def test_it_finds_variation_btw_district_state
     ha = HeadcountAnalyst.new(dr)
 
     assert_equal 0.766 , ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
-    assert_equal 1.337 , ha.kindergarten_participation_rate_variation('ADAMS COUNTY 14', :against => 'COLORADO')
+    assert_equal 1.336 , ha.kindergarten_participation_rate_variation('ADAMS COUNTY 14', :against => 'COLORADO')
   end
 
   def test_it_finds_variation_btw_two_districts
     ha = HeadcountAnalyst.new(dr)
 
-    assert_equal 0.572 , ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'ADAMS COUNTY 14')
+    assert_equal 0.573 , ha.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'ADAMS COUNTY 14')
   end
 
   def test_it_returns_a_float
@@ -79,14 +79,14 @@ class HeadcountAnalystTest < Minitest::Test
   def test_it_finds_average_high_school_participation
     ha = HeadcountAnalyst.new(dr)
 
-    assert_equal 0.751 , ha.find_average_participation("COLORADO", :high_school_graduation_participation)
-    assert_equal 0.898 , ha.find_average_participation("ACADEMY 20", :high_school_graduation_participation)
+    assert_equal 0.751708 , ha.find_average_participation("COLORADO", :high_school_graduation_participation)
+    assert_equal 0.898312 , ha.find_average_participation("ACADEMY 20", :high_school_graduation_participation)
   end
 
   def test_it_finds_variation_btw_two_high_school_districts
     ha = HeadcountAnalyst.new(dr)
 
-    assert_equal 1.467 , ha.high_school_participation_rate_variation('ACADEMY 20', :against => 'ADAMS COUNTY 14')
+    assert_equal 1.465 , ha.high_school_participation_rate_variation('ACADEMY 20', :against => 'ADAMS COUNTY 14')
   end
 
   def test_it_finds_variation_high_school_district_state
@@ -187,8 +187,8 @@ class HeadcountAnalystTest < Minitest::Test
     ha = HeadcountAnalyst.new(dr)
 
     assert_equal 0.501 , ha.kindergarten_participation_against_household_income("ACADEMY 20")
-    assert_equal 1.859 , ha.kindergarten_participation_against_household_income("ADAMS COUNTY 14")
-    assert_equal 1.647 , ha.kindergarten_participation_against_household_income("AGATE 300")
+    assert_equal 1.858 , ha.kindergarten_participation_against_household_income("ADAMS COUNTY 14")
+    assert_equal 1.645 , ha.kindergarten_participation_against_household_income("AGATE 300")
   end
 
   def test_kdg_correlation_to_income_returns_result

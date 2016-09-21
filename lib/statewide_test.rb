@@ -51,7 +51,7 @@ class StatewideTest
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
     raise UnknownDataError unless VALID_GRADES.include?(grade) &&
-    VALID_SUBJECTS.include?(subject)
+    VALID_SUBJECTS.include?(subject) && valid_year?(year, grade)
 
     result = truncate(self.third_grade[year][subject]) if grade == 3
     result = truncate(self.eighth_grade[year][subject]) if grade == 8
@@ -61,11 +61,21 @@ class StatewideTest
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
     raise UnknownDataError unless VALID_RACES.include?(race) &&
-    VALID_SUBJECTS.include?(subject)
+    VALID_SUBJECTS.include?(subject) && valid_year?(year, race)
 
     result = truncate(self.send(race)[year][subject])
 
     return result == 0.0 ? 'N/A' : result
+  end
+
+  def valid_year?(year, category)
+    if category == 3
+      third_grade.keys.include?(year)
+    elsif category == 8
+      eighth_grade.keys.include?(year)
+    else
+      self.send(category).keys.include?(year)
+    end
   end
 
 end

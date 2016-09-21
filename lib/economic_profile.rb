@@ -1,6 +1,8 @@
 require_relative 'custom_errors'
+require_relative 'sanitizer'
 
 class EconomicProfile
+  include Sanitizer
 
   attr_reader :name,
               :median_household_income,
@@ -40,7 +42,7 @@ class EconomicProfile
   def children_in_poverty_in_year(year)
     raise UnknownDataError unless children_in_poverty.keys.include?(year)
 
-    children_in_poverty[year]
+    truncate(children_in_poverty[year])
   end
 
   def free_or_reduced_price_lunch_percentage_in_year(year)
