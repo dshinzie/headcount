@@ -26,6 +26,5 @@ class ResultEntryTest < Minitest::Test
 
     assert_equal 50000, r1.median_household_income
   end
-
-
+  
 end

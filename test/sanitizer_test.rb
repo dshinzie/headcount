@@ -3,8 +3,6 @@ require_relative '../lib/sanitizer'
 
 class SanitizerTest < Minitest::Test
 
-# add truncate, sanitize hash and symbol tests
-
   def test_can_truncate_values
     assert_equal 0.709, Sanitizer.truncate(0.7094)
     assert_equal 0.545, Sanitizer.truncate(0.54541345)
@@ -12,8 +10,10 @@ class SanitizerTest < Minitest::Test
   end
 
   def test_can_sanitize_hash
-    skip
     test_hash = {:math=>0.7094, :reading=>0.7482, :writing=>0.6569}
+    expected = {:math=>0.709, :reading=>0.748, :writing=>0.656}
+
+    assert_equal expected, Sanitizer.sanitize_hash(test_hash)
   end
 
   def test_can_sanitize_to_symbols

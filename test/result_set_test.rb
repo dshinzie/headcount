@@ -5,7 +5,6 @@ require_relative '../lib/district_repository'
 require_relative '../lib/headcount_analyst'
 
 class ResultSetTest < Minitest::Test
-  # attr_reader
 
   def starter_repo
     @dr = DistrictRepository.new
@@ -24,7 +23,7 @@ class ResultSetTest < Minitest::Test
     @ha = HeadcountAnalyst.new(@dr)
     @ha
   end
-  
+
   def test_matching_districts_returns_free_reduced_lunch
     r1 = ResultEntry.new({free_and_reduced_price_lunch_rate: 0.5})
     rs = ResultSet.new(matching_districts: [r1])

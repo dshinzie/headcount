@@ -6,8 +6,8 @@ class LoaderTest < Minitest::Test
   def test_can_split_filenames_into_array
     file_hash = {
       :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv",
-        :high_school_graduation => "./data/High school graduation rates.csv"
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv",
+        :high_school_graduation => "./fixture/High school graduation rates.csv"
         }
       }
     Loader.extract_filenames(file_hash)
@@ -24,7 +24,7 @@ class LoaderTest < Minitest::Test
   def test_loader_runs_district_load
     file_hash = {
       :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv"
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv"
       }
     }
     districts = {}
@@ -46,7 +46,7 @@ class LoaderTest < Minitest::Test
   def test_loader_runs_enrollment_load
     file_hash = {
       :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv"
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv"
       }
     }
     enrollments = {}
@@ -55,7 +55,6 @@ class LoaderTest < Minitest::Test
     test_list = ['Colorado', 'ACADEMY 20', 'Agate 300']
     test_list.each { |enrollment| assert enrollments.keys.include?(enrollment.upcase)}
   end
-  # add enrollment specific test
 
   def test_loader_adds_to_statewide_tests_hash_by_third_grade_proficiency
     test_hash = {:location => 'Test', :score => 'Math', :timeframe => 2016, :data => 0.75}
@@ -119,8 +118,8 @@ class LoaderTest < Minitest::Test
   def test_loader_runs_statewide_test_load_multiple_files_of_ethnicity_category
     file_hash = {
       :statewide_testing => {
-        :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
-        :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+        :math => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+        :writing => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
       }
     }
     statewide_tests = {}
@@ -138,8 +137,8 @@ class LoaderTest < Minitest::Test
   def test_loader_runs_statewide_test_load_multiple_files_of_different_categories
     file_hash = {
       :statewide_testing => {
-        :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-        :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+        :third_grade => "./fixture/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :writing => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
       }
     }
     statewide_tests = {}
@@ -157,11 +156,11 @@ class LoaderTest < Minitest::Test
   def test_loader_runs_statewide_test_load
     file_hash = {
       :statewide_testing => {
-        :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-        :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
-        :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
-        :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
-        :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+        :third_grade => "./fixture/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :eighth_grade => "./fixture/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :math => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+        :reading => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+        :writing => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
       }
     }
     statewide_tests = {}

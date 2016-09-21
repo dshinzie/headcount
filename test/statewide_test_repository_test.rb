@@ -13,7 +13,7 @@ class StatewideTestRepositoryTest < Minitest::Test
     str = StatewideTestRepository.new
     str.load_data({
       :statewide_testing => {
-        :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv"}
+        :third_grade => "./fixture/3rd grade students scoring proficient or above on the CSAP_TCAP.csv"}
       })
 
     test_list = ['Colorado', 'ACADEMY 20', 'Agate 300']
@@ -25,11 +25,11 @@ class StatewideTestRepositoryTest < Minitest::Test
     str = StatewideTestRepository.new
     str.load_data({
       :statewide_testing => {
-        :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-        :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
-        :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
-        :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
-        :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+        :third_grade => "./fixture/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :eighth_grade => "./fixture/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :math => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+        :reading => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+        :writing => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
       }
       })
 
@@ -40,11 +40,11 @@ class StatewideTestRepositoryTest < Minitest::Test
     str = StatewideTestRepository.new
     str.load_data({
       :statewide_testing => {
-        :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-        :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
-        :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
-        :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
-        :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+        :third_grade => "./fixture/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :eighth_grade => "./fixture/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :math => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+        :reading => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+        :writing => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
       }
       })
 
@@ -56,8 +56,8 @@ class StatewideTestRepositoryTest < Minitest::Test
     str = StatewideTestRepository.new
     str.load_data({
       :statewide_testing => {
-        :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-        :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv"}
+        :third_grade => "./fixture/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :math => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv"}
       })
 
     st = str.find_by_name("COLORADO")

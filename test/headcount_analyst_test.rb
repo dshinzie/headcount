@@ -19,7 +19,6 @@ class HeadcountAnalystTest < Minitest::Test
         :title_i => "./data/Title I students.csv"
           }
         })
-
   end
 
   def test_enrollment_loads_with_district_repo_load
@@ -155,7 +154,7 @@ class HeadcountAnalystTest < Minitest::Test
   def test_returns_median_income
     ha = HeadcountAnalyst.new(dr)
 
-    assert_equal 57408, rs = ha.get_median_income_average
+    assert_equal 57408, ha.get_median_income_average
   end
 
   def test_returns_result_set_for_poverty_income
@@ -181,13 +180,11 @@ class HeadcountAnalystTest < Minitest::Test
   def test_it_returns_a_float_for_kdg_partic_against_household_income
     ha = HeadcountAnalyst.new(dr)
 
-
     assert ha.kindergarten_participation_against_household_income("ACADEMY 20").instance_of?(Float)
   end
 
-  def test_it_returns_a_float_for_kdg_partic_against_household_income
+  def test_it_returns_value_for_kdg_partic_against_household_income
     ha = HeadcountAnalyst.new(dr)
-
 
     assert_equal 0.501 , ha.kindergarten_participation_against_household_income("ACADEMY 20")
   end
@@ -212,6 +209,5 @@ class HeadcountAnalystTest < Minitest::Test
     assert ha.kindergarten_participation_correlates_with_household_income(
     :across => ['COLORADO', 'ACADEMY 20'])
   end
-
 
 end
