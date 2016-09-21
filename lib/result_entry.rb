@@ -17,14 +17,14 @@ class ResultEntry
     @name = input_hash[:name]
   end
 
-  def poverty_high_school_state_comp(re)
+  def poverty_hs_state_comp(re)
     self.free_and_reduced_price_lunch_rate >
     re.free_and_reduced_price_lunch_rate &&
     self.children_in_poverty_rate > re.children_in_poverty_rate &&
     self.high_school_graduation_rate > re.high_school_graduation_rate
   end
 
-  def poverty_income_state_comp(re)
+  def income_state_comp(re)
     self.children_in_poverty_rate > re.children_in_poverty_rate &&
     self.median_household_income > re.median_household_income
   end

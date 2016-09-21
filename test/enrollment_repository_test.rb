@@ -13,7 +13,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     er = EnrollmentRepository.new
     er.load_data({
       :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv"
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv"
       }
     })
 
@@ -24,7 +24,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     er = EnrollmentRepository.new
     er.load_data({
       :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv"
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv"
       }
     })
 
@@ -36,7 +36,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     er = EnrollmentRepository.new
     er.load_data({
       :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv"
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv"
       }
     })
 
@@ -48,7 +48,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     dr = EnrollmentRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv"
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv"
       }
     })
 
@@ -60,7 +60,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     er = EnrollmentRepository.new
     er.load_data({
       :enrollment => {
-        :high_school_graduation => "./data/High school graduation rates.csv"
+        :high_school_graduation => "./fixture/High school graduation rates.csv"
         }
       })
 
@@ -71,7 +71,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     er = EnrollmentRepository.new
     er.load_data({
       :enrollment => {
-        :kindergarten => "./fixture/Kindergartners in full-day program clean.csv",
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv",
         :high_school_graduation => "./fixture/High school graduation rates.csv"
         }
       })
@@ -86,7 +86,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     er = EnrollmentRepository.new
     er.load_data({
       :enrollment => {
-        :kindergarten => "./fixture/Kindergartners in full-day program clean.csv",
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv",
         :high_school_graduation => "./fixture/High school graduation rates.csv"
         }
       })

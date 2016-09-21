@@ -1,6 +1,7 @@
 require_relative 'test_helper'
 require_relative '../lib/enrollment'
 require_relative '../lib/district_repository'
+require_relative '../lib/economic_profile_repository'
 
 class EnrollmentTest < Minitest::Test
 

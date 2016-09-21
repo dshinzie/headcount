@@ -1,5 +1,7 @@
 require_relative 'test_helper'
 require_relative '../lib/economic_profile'
+require_relative '../lib/economic_profile_repository'
+require_relative '../lib/loader'
 
 class EconomicProfileTest < Minitest::Test
 
@@ -20,7 +22,7 @@ class EconomicProfileTest < Minitest::Test
     @ep3 = @epr.find_by_name('AGATE 300')
     @ep4 = @epr.find_by_name('COLORADO')
   end
-  
+
   def test_can_get_average_income_in_year
     assert_equal 85060, ep.median_household_income_in_year(2005)
     assert_equal 41305.20, ep2.median_household_income_in_year(2009)

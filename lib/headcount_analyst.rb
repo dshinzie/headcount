@@ -94,7 +94,7 @@ class HeadcountAnalyst
   end
 
   def calculate_correlation_with_income(name)
-    variation = kindergarten_participation_against_high_school_graduation(name)
+    variation = kindergarten_participation_against_household_income(name)
     variation.between?(0.6, 1.5)
   end
 
@@ -110,7 +110,7 @@ class HeadcountAnalyst
     results = []
     @dr.districts.keys.each do |district_name|
       result_entry = district_result_entry(district_name)
-      results << result_entry if result_entry.poverty_high_school_state_comp(statewide)
+      results << result_entry if result_entry.poverty_hs_state_comp(statewide)
     end
     ResultSet.new(matching_districts: results, statewide_average: statewide)
   end
@@ -121,7 +121,7 @@ class HeadcountAnalyst
     @dr.districts.keys.each do |district_name|
       if district_name != "COLORADO"
         result_entry = district_result_entry(district_name)
-        results << result_entry if result_entry.poverty_income_state_comp(statewide)
+        results << result_entry if result_entry.income_state_comp(statewide)
       end
     end
     ResultSet.new(matching_districts: results, statewide_average: statewide)
@@ -191,7 +191,6 @@ class HeadcountAnalyst
   def get_poverty_average(district_name)
     district = @dr.find_by_name(district_name)
     all_data = district.economic_profile.children_in_poverty.values
-    # binding.pry
     return nil if all_data.count == 0
     all_data.reduce(:+) / all_data.size
   end
@@ -210,11 +209,7 @@ class HeadcountAnalyst
     district = @dr.find_by_name(district_name)
     all_data = district.economic_profile.median_household_income.values
     return nil if all_data.count == 0
-    total = all_data.reduce(:+) / all_data.size
-    total = total / @dr.districts.keys.count if district_name == "COLORADO"
-    total
+    all_data.reduce(:+) / all_data.size
   end
-
-
 
 end

@@ -1,5 +1,6 @@
 require_relative 'test_helper'
 require_relative '../lib/district_repository'
+require_relative '../lib/economic_profile_repository'
 
 class DistrictRepositoryTest < Minitest::Test
 
@@ -13,7 +14,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv"
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv"
       }
     })
 
@@ -24,7 +25,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv"
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv"
       }
     })
 
@@ -36,7 +37,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv"
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv"
       }
     })
 
@@ -48,58 +49,56 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv"
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv"
       }
     })
 
-    assert_equal 2, dr.find_all_matching('Col').length
-    assert_equal 8, dr.find_all_matching('AD').length
+    assert_equal 1, dr.find_all_matching('Col').length
+    assert_equal 3, dr.find_all_matching('AD').length
   end
 
   def test_enrollment_is_linked_after_loading
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv"
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv"
       }
     })
 
     test_list = ['Colorado', 'ACADEMY 20', 'Agate 300']
 
     test_list.each { |name| assert dr.districts.values.find{|district| district.enrollment.name == name.upcase }}
-    #dr.districts.values.each {|district| refute district.enrollment.nil?}
   end
 
   def test_statewide_test_is_linked_after_loading
     dr = DistrictRepository.new
     dr.load_data({
       :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv",
-        :high_school_graduation => "./data/High school graduation rates.csv",
+        :kindergarten => "./fixture/Kindergartners in full-day program.csv",
+        :high_school_graduation => "./fixture/High school graduation rates.csv",
       },
       :statewide_testing => {
-        :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-        :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
-        :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
-        :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
-        :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+        :third_grade => "./fixture/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :eighth_grade => "./fixture/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+        :math => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+        :reading => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+        :writing => "./fixture/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
       }
     })
 
     test_list = ['Colorado', 'ACADEMY 20', 'Agate 300']
 
     test_list.each { |name| assert dr.districts.values.find{|district| district.statewide_test.name == name.upcase }}
-    #dr.districts.values.each {|district| refute district.statewide_test.nil?}
   end
 
   def test_economic_profile_is_linked_after_loading
     dr = DistrictRepository.new
     dr.load_data({
         :economic_profile => {
-          :median_household_income => "./data/Median household income.csv",
-          :children_in_poverty => "./data/School-aged children in poverty.csv",
-          :free_or_reduced_price_lunch => "./data/Students qualifying for free or reduced price lunch.csv",
-          :title_i => "./data/Title I students.csv"
+          :median_household_income => "./fixture/Median household income.csv",
+          :children_in_poverty => "./fixture/School-aged children in poverty.csv",
+          :free_or_reduced_price_lunch => "./fixture/Students qualifying for free or reduced price lunch.csv",
+          :title_i => "./fixture/Title I students.csv"
         }
       })
 
