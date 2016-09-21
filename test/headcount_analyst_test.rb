@@ -95,6 +95,12 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal 1.467 , ha.high_school_participation_rate_variation('ACADEMY 20', :against => 'ADAMS COUNTY 14')
   end
 
+  def test_it_finds_variation_high_school_district_state
+    ha = HeadcountAnalyst.new(dr)
+
+    assert_equal 1.195 , ha.high_school_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
+  end
+
   def test_kdg_participation_against_high_school
     ha = HeadcountAnalyst.new(dr)
 
@@ -183,22 +189,18 @@ class HeadcountAnalystTest < Minitest::Test
     assert ha.kindergarten_participation_against_household_income("ACADEMY 20").instance_of?(Float)
   end
 
-  def test_it_returns_value_for_kdg_partic_against_household_income
+  def test_it_returns_value_for_kdg_participation_against_household_income
     ha = HeadcountAnalyst.new(dr)
 
     assert_equal 0.501 , ha.kindergarten_participation_against_household_income("ACADEMY 20")
+    assert_equal 1.859 , ha.kindergarten_participation_against_household_income("ADAMS COUNTY 14")
+    assert_equal 1.647 , ha.kindergarten_participation_against_household_income("AGATE 300")
   end
 
-  def test_kdg_correlation_to_income_returns_true
+  def test_kdg_correlation_to_income_returns_result
     ha = HeadcountAnalyst.new(dr)
 
-    assert_equal true, ha.kindergarten_participation_correlates_with_household_income(for: "ACADEMY 20")
-  end
-
-  def test_passing_in_statewide_values
-    ha = HeadcountAnalyst.new(dr)
-
-    refute  ha.kindergarten_participation_correlates_with_household_income(:for => 'STATEWIDE')
+    assert_equal false, ha.kindergarten_participation_correlates_with_household_income(for: "ACADEMY 20")
   end
 
   def test_passing_in_array_of_districts_for_income
@@ -206,7 +208,7 @@ class HeadcountAnalystTest < Minitest::Test
 
     assert_equal false, ha.kindergarten_participation_correlates_with_household_income(
     :across => ['COLORADO', 'ACADEMY 20', 'ADAMS COUNTY 14', 'AGATE 300'])
-    assert ha.kindergarten_participation_correlates_with_household_income(
+    assert_equal false, ha.kindergarten_participation_correlates_with_household_income(
     :across => ['COLORADO', 'ACADEMY 20'])
   end
 
