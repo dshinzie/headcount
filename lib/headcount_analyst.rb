@@ -4,7 +4,6 @@ require_relative 'sanitizer'
 require_relative 'result_entry'
 require_relative 'result_set'
 
-
 class HeadcountAnalyst
   include Sanitizer
 
