@@ -89,4 +89,11 @@ class EnrollmentTest < Minitest::Test
 
     assert_equal nil, e.graduation_rate_in_year(1990)
   end
+
+  def test_safe_year_retrieval_can_return_nil
+    e = Enrollment.new({:name => "ACADEMY 20", :high_school_graduation_participation => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}})
+
+    assert e.safe_year_retrieval(e.high_school_graduation_participation, 1990).nil?
+  end
+
 end

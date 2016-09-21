@@ -1,9 +1,8 @@
-require_relative 'statewide_test'
 require_relative 'loader'
-require 'csv'
-require 'pry'
 
 class StatewideTestRepository
+  include Loader
+
   attr_reader :statewide_tests
 
   def initialize
@@ -11,7 +10,7 @@ class StatewideTestRepository
   end
 
   def load_data(file_hash)
-    Loader.load_data_statewide(file_hash, @statewide_tests)
+    load_data_statewide(file_hash, @statewide_tests)
   end
 
   def find_by_name(name)

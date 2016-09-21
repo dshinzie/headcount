@@ -21,7 +21,7 @@ class StatewideTestRepositoryTest < Minitest::Test
 
   end
 
-  def test_enrollment_hash_is_populated_after_loading
+  def test_statwide_test_hash_is_populated_after_loading
     str = StatewideTestRepository.new
     str.load_data({
       :statewide_testing => {

@@ -3,6 +3,7 @@ require_relative '../lib/headcount_analyst'
 require_relative '../lib/district_repository'
 
 class HeadcountAnalystTest < Minitest::Test
+
   attr_reader :dr
 
   def setup
@@ -23,11 +24,6 @@ class HeadcountAnalystTest < Minitest::Test
 
   def test_enrollment_loads_with_district_repo_load
     refute dr.enrollment.nil?
-  end
-
-  def test_enrollment_loads_enrollment_names
-    test_list = ['Colorado', 'ACADEMY 20', 'Agate 300']
-    test_list.each { |enrollment| assert dr.enrollment.enrollments.keys.include?(enrollment.upcase)}
   end
 
   def test_it_finds_average_kindergarten_participation
@@ -67,7 +63,6 @@ class HeadcountAnalystTest < Minitest::Test
 
   def test_rate_variation_trend_builds_hash
     ha = HeadcountAnalyst.new(dr)
-
     result = ha.kindergarten_participation_rate_variation_trend('ACADEMY 20', :against => 'COLORADO')
 
     refute result.empty?
@@ -76,7 +71,6 @@ class HeadcountAnalystTest < Minitest::Test
 
   def test_rate_variation_compares_all_years
     ha = HeadcountAnalyst.new(dr)
-
     result = {2004 => 1.257, 2005 => 0.96, 2006 => 1.05, 2007 => 0.992, 2008 => 0.717, 2009 => 0.652, 2010 => 0.681, 2011 => 0.727, 2012 => 0.688, 2013 => 0.694, 2014 => 0.661 }
 
     assert_equal result, ha.kindergarten_participation_rate_variation_trend('ACADEMY 20', :against => 'COLORADO')
@@ -122,12 +116,12 @@ class HeadcountAnalystTest < Minitest::Test
   def test_passing_in_array_of_districts
     ha = HeadcountAnalyst.new(dr)
 
-    assert_equal false, ha.kindergarten_participation_correlates_with_high_school_graduation(
+    refute ha.kindergarten_participation_correlates_with_high_school_graduation(
     :across => ['COLORADO', 'ACADEMY 20', 'ADAMS COUNTY 14', 'AGATE 300'])
+
     assert ha.kindergarten_participation_correlates_with_high_school_graduation(
     :across => ['COLORADO', 'ACADEMY 20'])
   end
-
 
   def test_returns_result_set_for_high_povert_high_grad
     ha = HeadcountAnalyst.new(dr)
@@ -143,18 +137,18 @@ class HeadcountAnalystTest < Minitest::Test
     assert rs.matching_districts.count > 0
   end
 
-  def test_returns_state_for_high_poverty_high_grad
-    ha = HeadcountAnalyst.new(dr)
-    rs = ha.high_poverty_and_high_school_graduation
-
-    assert_equal 'COLORADO', rs.statewide_average.name
-  end
-
   def test_returns_matching_district_count_for_high_poverty_high_grad
     ha = HeadcountAnalyst.new(dr)
     rs = ha.high_poverty_and_high_school_graduation
 
     assert_equal 12, rs.matching_districts.count
+  end
+
+  def test_returns_state_for_high_poverty_high_grad
+    ha = HeadcountAnalyst.new(dr)
+    rs = ha.high_poverty_and_high_school_graduation
+
+    assert_equal 'COLORADO', rs.statewide_average.name
   end
 
   def test_returns_median_income

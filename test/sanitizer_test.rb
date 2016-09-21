@@ -45,4 +45,11 @@ class SanitizerTest < Minitest::Test
     assert_equal expected_hash, Sanitizer.sanitize_nested_hash(nil, test_hash, true)
   end
 
+  def test_can_sanitize_years
+    assert_equal 2009, Sanitizer.sanitize_years('2009')
+    assert_equal 1990, Sanitizer.sanitize_years('1990')
+    assert_equal [2005, 2009], Sanitizer.sanitize_years('2005-2009')
+    assert_equal [2000, 3000], Sanitizer.sanitize_years('2000-3000')
+  end
+
 end

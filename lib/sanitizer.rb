@@ -1,8 +1,6 @@
-require 'pry'
-
 module Sanitizer
-
 extend self
+
   def truncate(number)
     (number*1000).floor/1000.0
   end
@@ -10,7 +8,7 @@ extend self
   def sanitize_hash(data_hash)
     data = {}
     data_hash.each do |key, value|
-      data[key] = Sanitizer.truncate(value)
+      data[key] = truncate(value)
     end
     data
   end
@@ -19,7 +17,7 @@ extend self
     @nested = {} if first_run
     data_hash.each do |key, value|
       value.is_a?(Hash) ? sanitize_nested_hash(key, value, false)
-      : data_hash[key] = Sanitizer.truncate(value)
+      : data_hash[key] = truncate(value)
     end
     @nested[parent] = data_hash unless parent.nil?
     @nested
@@ -35,6 +33,5 @@ extend self
   def sanitize_years(input)
     input.include?('-') ? input.split('-').map(&:to_i) : input.to_i
   end
-
 
 end

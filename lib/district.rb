@@ -1,5 +1,3 @@
-require 'csv'
-
 class District
 
   attr_reader :name
